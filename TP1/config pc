@@ -1,0 +1,2 @@
+if config eth1 192.168.3.1 netmask 255.255.255.128
+route add default gw 192.168.3.126

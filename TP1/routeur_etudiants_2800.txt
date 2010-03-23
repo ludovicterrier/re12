@@ -1,0 +1,106 @@
+! 
+version 12.4            
+service timestamps debug datetime msec                                      
+service timestamps log datetime msec                                    
+no service password-encryption                              
+! 
+hostname Routeur3
+no ip domain lookup
+! 
+boot-start-marker                 
+boot-end-marker               
+! 
+! 
+no aaa new-model                
+! 
+! 
+ip cef      
+! 
+! 
+multilink bundle-name authenticated                                   
+! 
+! 
+voice-card 0            
+ no dspfarm           
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+archive       
+ log config         
+  hidekeys          
+! 
+! 
+! 
+! 
+! 
+! 
+interface FastEthernet0/0                         
+ no ip address             
+ duplex auto            
+ speed auto
+ no shutdown           
+! 
+interface FastEthernet0/0.1                           
+ encapsulation dot1Q 1 native                             
+ ip address 192.168.3.126 255.255.255.128                                         
+! 
+interface FastEthernet0/0.2                           
+ encapsulation dot1Q 2                      
+ ip address 192.168.3.254 255.255.255.128                                         
+! 
+interface FastEthernet0/1                         
+ ip address 172.16.3.1 255.255.255.252                                      
+ duplex auto            
+ speed auto
+ no shutdown          
+! 
+router ospf 10              
+ log-adjacency-changes                      
+ network 172.16.3.0 0.0.0.3 area 30                                   
+ network 192.168.3.0 0.0.0.127 area 30                                      
+ network 192.168.3.128 0.0.0.127 area 30                                
+! 
+ip route 0.0.0.0 0.0.0.0 172.16.3.2                                  
+! 
+! 
+ip http server              
+no ip http secure-server                        
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+!
+scheduler allocate 20000 1000
+!
+end

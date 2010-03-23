@@ -1,0 +1,100 @@
+! 
+version 12.2            
+no service pad              
+service timestamps debug uptime                               
+service timestamps log uptime                             
+no service password-encryption                              
+! 
+hostname Switch               
+! 
+! 
+no aaa new-model                
+ip subnet-zero              
+! 
+! 
+no mpls traffic-eng auto-bw timers frequency 0                                              
+no file verify auto                   
+spanning-tree mode pvst                       
+spanning-tree extend                    
+! 
+! 
+! 
+vlan internal allocation policy ascending                                         
+! 
+! 
+interface FastEthernet1/0/1                           
+! 
+interface FastEthernet1/0/2                           
+ switchport access vlan 2                         
+! 
+interface FastEthernet1/0/3                           
+! 
+interface FastEthernet1/0/4                           
+! 
+interface FastEthernet1/0/5                           
+! 
+interface FastEthernet1/0/6                           
+! 
+interface FastEthernet1/0/7                           
+! 
+interface FastEthernet1/0/8                           
+! 
+interface FastEthernet1/0/9                           
+! 
+interface FastEthernet1/0/10                            
+! 
+interface FastEthernet1/0/11                            
+! 
+interface FastEthernet1/0/12                            
+! 
+interface FastEthernet1/0/13                            
+! 
+interface FastEthernet1/0/14                            
+! 
+interface FastEthernet1/0/15                         
+! 
+interface FastEthernet1/0/16                            
+! 
+interface FastEthernet1/0/17                            
+! 
+interface FastEthernet1/0/18                            
+! 
+interface FastEthernet1/0/19                            
+! 
+interface FastEthernet1/0/20                            
+! 
+interface FastEthernet1/0/21                            
+! 
+interface FastEthernet1/0/22                            
+! 
+interface FastEthernet1/0/23                            
+! 
+interface FastEthernet1/0/24                            
+ switchport trunk encapsulation dot1q                                     
+ switchport mode trunk                      
+! 
+interface GigabitEthernet1/0/1                              
+! 
+interface GigabitEthernet1/0/2                              
+!
+interface GigabitEthernet1/1/1
+!
+interface GigabitEthernet1/1/2
+!
+interface Vlan1
+ no ip address
+!
+ip classless
+ip http server
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+line vty 5 15
+!
+end
