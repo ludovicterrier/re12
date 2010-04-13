@@ -1,0 +1,92 @@
+\documentclass[12pt,a4paper,notitlepage]{article}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage[francais]{babel}\usepackage[T1]{fontenc}
+\usepackage[cyr]{aeguill}
+\usepackage{lmodern}
+\usepackage{listings}
+\lstset{language=bash, basicstyle=\footnotesize, frame=shadowbox, rulesepcolor=\color{gris}}
+
+\usepackage{amssymb}
+\usepackage[table]{xcolor}
+\definecolor{gris}{gray}{0.75}
+\definecolor{bleup}{HTML}{258EE9}
+
+
+%\renewcommand*\familydefault{\ttdefault} %% Only if the base font of the document is to be typewriter style
+%\renewcommand{\rmdefault}{ptm}
+
+
+\usepackage[
+   pdfauthor={Ludovic Terrier & Arnaud Goulut},
+   pdftitle={RE12 - TP2},
+   ]{hyperref}
+   
+   
+\usepackage[pdftex]{graphicx}
+
+%\usepackage{titlesec}
+%\titleformat{\section}[frame] {\normalfont} {\filright
+%\footnotesize
+%\enspace\textbf{\thesection}\enspace} {8pt} {\Large\bfseries\filcenter}
+
+%% Je contrôle la taille de ma zone imprimée...
+\usepackage{anysize}
+%% ...en définissants les marges {gauche}{droite}{haute}{basse}
+\marginsize{25mm}{15mm}{10mm}{15mm}
+
+\begin{document}
+
+\title{La configuration réseau sous Linux (2)}
+\author{Ludovic Terrier et Arnaud Goulut}
+\date{Avril 2010}
+\maketitle
+
+
+%\tableofcontents
+
+\thispagestyle{empty}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  1ère page 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 1ère partie
+\section{Partie 1 : Les niveaux d'exécution}
+
+\subsection{Paramétrage du service réseau}
+On retrouve le paramétrage du service réseau dans le fichier : \texttt{/etc/init.d/network}
+
+\begin{lstlisting}
+#! /bin/bash
+#
+# network       Bring up/down networking
+#
+# chkconfig: 2345 10 90
+# description: Activates/Deactivates all network interfaces configured to \
+#              start at boot time.
+#
+### BEGIN INIT INFO
+# Provides: $network
+# Should-Start: iptables ip6tables
+### END INIT INFO\end{lstlisting}
+
+
+\subsection{Exécution des scripts}
+
+
+
+
+\subsection{La commande chkconfig}
+
+
+
+\section{Partie 2 : le super-serveur xinetd}
+\subsection{Configuration de telnetd}
+ 
+Ce qui peut vouloir dire que l'ensemble des autres ports sont dans le même VLAN par défaut.
+
+\subsection{Les services à rattacher à xinetd}
+
+\end{document}
