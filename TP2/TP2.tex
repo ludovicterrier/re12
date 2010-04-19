@@ -56,7 +56,7 @@
 \section{Partie 1 : Les niveaux d'exécution}
 
 \subsection{Paramétrage du service réseau}
-On retrouve le paramétrage du service réseau dans le fichier : \texttt{/etc/init.d/network}
+On retrouve le paramétrage du service réseau dans le fichier : \texttt{/etc/init.d/network} :
 
 \begin{lstlisting}
 #! /bin/bash
@@ -75,7 +75,7 @@ On retrouve le paramétrage du service réseau dans le fichier : \texttt{/etc/in
 
 \subsection{Exécution des scripts}
 
-
+Les commandes liées à l'exécution des scripts sont situées 
 
 
 \subsection{La commande chkconfig}
@@ -88,5 +88,11 @@ On retrouve le paramétrage du service réseau dans le fichier : \texttt{/etc/in
 Ce qui peut vouloir dire que l'ensemble des autres ports sont dans le même VLAN par défaut.
 
 \subsection{Les services à rattacher à xinetd}
+Il est préférable de rattacher à xinetd des services qui sont peu utilisés, tel que des services d'accès à distance. En revanche, pour des services subissant de nombreuses connections (tel que web, ldap, messagerie) on n'utilisera pas xinetd.
+
+\subsection{Filtrage d'accès}
+
+Il existe deux moyens pour filtre l'accès au serveur telnet.
+
 
 \end{document}
