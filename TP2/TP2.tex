@@ -5,13 +5,15 @@
 \usepackage[francais]{babel}\usepackage[T1]{fontenc}
 \usepackage[cyr]{aeguill}
 \usepackage{lmodern}
+\usepackage{color}
+\usepackage{boites}
+\usepackage{fancybox}
 \usepackage{listings}
 \lstset{language=bash, basicstyle=\footnotesize, frame=shadowbox, rulesepcolor=\color{gris}}
 
-\usepackage{amssymb}
-\usepackage[table]{xcolor}
+
 \definecolor{gris}{gray}{0.75}
-\definecolor{bleup}{HTML}{258EE9}
+%\definecolor{bleup}{HTML}{258EE9}
 
 
 %\renewcommand*\familydefault{\ttdefault} %% Only if the base font of the document is to be typewriter style
@@ -39,7 +41,7 @@
 \begin{document}
 
 \title{La configuration réseau sous Linux (2)}
-\author{Ludovic Terrier et Arnaud Goulut}
+\author{Arnaud Goulut et Ludovic Terrier}
 \date{Avril 2010}
 \maketitle
 
@@ -75,7 +77,7 @@ On retrouve le paramétrage du service réseau dans le fichier : \texttt{/etc/in
 
 \subsection{Exécution des scripts}
 
-Les commandes liées à l'exécution des scripts sont situées 
+Les commandes liées à l'exécution des scripts sont situées dans le dossier \texttt{/etc/init.d/} qui sont les cibles des liens symboliques situées dans rcX.d.
 
 
 \subsection{La commande chkconfig}
@@ -92,7 +94,57 @@ Il est préférable de rattacher à xinetd des services qui sont peu utilisés, 
 
 \subsection{Filtrage d'accès}
 
-Il existe deux moyens pour filtre l'accès au serveur telnet.
+Il existe deux moyens pour filtre l'accès au serveur telnet : 
+\begin{itemize}
+\item via les fichiers \texttt{/etc/hosts.allow} et \texttt{/etc/hosts.deny},
+\item dans le fichier de configuration de chaque service.
+\end{itemize}
+
+\subsubsection{\texttt{host.deny} et \texttt{host.allow}}
+
+\noindent Pré-requis : le fichier allow est prioritaire sur le fichier deny.\\
+
+\begin{lstlisting}
+# /etc/hosts.deny: list of hosts that are _not_ allowed to access the system.
+ALL EXCEPT in.telnetd: 192.168.3.0
+\end{lstlisting}
+Ainsi, avec la ligne suivante on n'autorise personne (\texttt{ALL}) pour le service telnet (\texttt{in.telnetd}) avec pour exception le réseau local (\texttt{192.168.3.0}).
+
+
+\subsubsection{fichier de configuration}
+
+
+\subsubsection{permissif ou restrictif?}
+
+
+
+La stratégie qui semble la plus sûre est celle utilisant un filtrage restrictif puisque l'on spécifie explicitement ce que l'on veut autoriser; donnant plus de contrôle sur les accès de la machine.
+
+
+\section{Partie 3 : Serveurs d'accès distant}
+
+\subsection{Attache à xinetd}
+
+Pour le rattacher, il suffit de créer un fichier de configuration pour notre nouveau service, en ajoutant le paramètre :\\
+
+\begin{lstlisting}
+# default: on
+service ssh
+{
+       flags		= REUSE
+       socket_type	= stream
+       wait		= no
+       user		= root
+       server		= /usr/sbin/sshd
+       server_args	= -i
+       log_on_failure	+= USERID
+       disable		= no
+}
+\end{lstlisting}
+
+
+
+
 
 
 \end{document}
