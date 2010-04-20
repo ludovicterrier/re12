@@ -107,6 +107,33 @@ Dans le cadre du TP la configuration de telnetd pour xinetd a simplement consist
 Il est préférable de rattacher à xinetd des services qui sont peu utilisés, tels des services d'accès à distance. En revanche, pour des services recevant de nombreuses connections (tel que web, ldap et messagerie) on n'utilisera pas xinetd.
 
 \subsection{Capture de session telnet}
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=1cm]{syn_ack.png}
+\caption{Etablissement d'une connexion TCP pour telnet.}
+\label{fig:do}
+\end{center}
+\end{figure}
+
+Nous voyons ici les échange SYN, SYN/ACK et ACK à l'initiative du client pour établir la connexion telnet. Nous pouvons remarquer le port utilisé par le client : 53105.  Le Maximum Segment Size (MSS) est de 1460 octets et la fenêtre (Win) à une taille de 5840 octets pour le client.
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=4cm]{pck15.png}
+\caption{Paquet numéro 15 de la communication TCP.}
+\label{fig:do}
+\end{center}
+\end{figure}
+
+La figure précédente montre en détail le contenu TCP du paquet 15. Le client envoie l'Ack 55, c'est à dire qu'il attend l'octet 55 dans le prochain paquet. On remarque aussi la taille de la fenêtre (\og Windows size\fg) que est de 5888 octets. Dans le paquet suivant on voit qui le serveur envoie quant-à lui le paquet numéro 55 (Seq). Ce qui correspond bien aux attentes du client.
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=4cm]{pck16.png}
+\caption{Paquet numéro 16 de la communication TCP.}
+\label{fig:do}
+\end{center}
+\end{figure}
 
 \subsection{Filtrage d'accès}
 
