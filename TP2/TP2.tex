@@ -72,16 +72,27 @@ On retrouve le paramétrage du service réseau dans le fichier : \texttt{/etc/in
 ### BEGIN INIT INFO
 # Provides: $network
 # Should-Start: iptables ip6tables
-### END INIT INFO\end{lstlisting}
+### END INIT INFO
+\end{lstlisting}
 
+La ligne contenant chkconfig nous indique que ce service est par défaut démarré dans les runlevels 2, 3, 4 et 5 avec la priorité 10. De plus, il est stoppé dans les autres runlevels (1 et 6) avec la priorité 90. 
 
 \subsection{Exécution des scripts}
 
-Les commandes liées à l'exécution des scripts sont situées dans le dossier \texttt{/etc/init.d/} qui sont les cibles des liens symboliques situées dans rcX.d où X est le numéro du runlevel.
+Les commandes liées à l'exécution des scripts sont situées dans le dossier \texttt{/etc/init.d/} qui sont les cibles des liens symboliques situées dans le dossier \texttt{/etc/rcX.d}, où \texttt{X} est le numéro du runlevel.
 
 
 \subsection{La commande chkconfig}
+Cette commande permet de modifier le paramétrage des différents services dont celui du réseau. On peut tout d'abord vérifier les états au démarrage d'un service donné pour chaques runlevels avec la commande :
 
+\begin{lstlisting}
+chkconfig --list network
+\end{lstlisting}
+De plus, on peut modifier l'état au démarrage d'un service pour les runlevels avec la commande :
+\begin{lstlisting}
+chkconfig --level 5 network off
+\end{lstlisting}
+Dans ce cas, le service \texttt{network} ne démarrera pas dans le runlevel 5.
 
 
 \section{Partie 2 : le super-serveur xinetd}
