@@ -106,6 +106,8 @@ Dans le cadre du TP la configuration de telnetd pour xinetd a simplement consist
 \subsection{Les services à rattacher à xinetd}
 Il est préférable de rattacher à xinetd des services qui sont peu utilisés, tels des services d'accès à distance. En revanche, pour des services recevant de nombreuses connections (tel que web, ldap et messagerie) on n'utilisera pas xinetd.
 
+\subsection{Capture de session telnet}
+
 \subsection{Filtrage d'accès}
 
 Il existe deux moyens pour filtrer l'accès à un service : 
@@ -120,26 +122,40 @@ Il existe deux moyens pour filtrer l'accès à un service :
 
 \begin{lstlisting}
 # /etc/hosts.deny: list of hosts that are _not_ allowed to access the system.
-ALL EXCEPT in.telnetd: 192.168.3.0
+ALL EXCEPT in.telnetd: 192.168.3.0/255.255.255.0
 \end{lstlisting}
-Ainsi, avec la ligne suivante on autorise personne (\texttt{ALL}) pour le service telnet (\texttt{in.telnetd}) avec pour exception le réseau local (\texttt{192.168.3.0}).
+Ainsi, avec la ligne suivante on autorise personne (\texttt{ALL}) sauf pour le service telnet (\texttt{in.telnetd}) qui sera autorisé pour le réseau local (\texttt{192.168.3.0}).
 
 
 \subsubsection{fichier de configuration}
 
+\begin{lstlisting}
+# default: on
+service in.telnetd
+{
+       flags		= REUSE
+       socket_type	= stream
+       wait		= no
+       user		= root
+       server		= /usr/sbin/in.telnetd
+       only_from	= 192.168.3.0
+       log_on_failure	+= USERID
+       disable		= no
+}
+\end{lstlisting}
 
 \subsubsection{permissif ou restrictif?}
 
 
 
-La stratégie qui semble la plus sûre est celle utilisant un filtrage restrictif puisque l'on spécifie explicitement ce que l'on veut autoriser; donnant plus de contrôle sur les accès de la machine.
+La stratégie qui semble la plus sûre est celle utilisant un filtrage restrictif puisque l'on spécifie explicitement ce que l'on veut autoriser; donnant plus de contrôle sur les accès à destination de la machine.
 
 
 \section{Partie 3 : Serveurs d'accès distant}
 
 \subsection{Attache à xinetd}
 
-Pour le rattacher, il suffit de créer un fichier de configuration pour notre nouveau service, en ajoutant le paramètre :\\
+Pour rattacher un nouveau service à xinetd, il suffit de créer un fichier de configuration dans \texttt{/etc/xinet.d/} en ajoutant le paramètre \texttt{server\_args = -i} et en stoppant le service ssh: \\
 
 \begin{lstlisting}
 # default: on
@@ -156,6 +172,7 @@ service ssh
 }
 \end{lstlisting}
 
+Après divers tests on s'aperçoit que le temps d'accès au service ssh n'est que sensiblement augmenté après le rattachement de celui-ci à xinetd.
 
 
 
