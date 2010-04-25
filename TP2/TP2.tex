@@ -98,7 +98,7 @@ Dans ce cas, le service \texttt{network} ne démarrera pas dans le runlevel 5.
 \section{Partie 2 : le super-serveur xinetd}
 \subsection{Configuration de telnetd}
  
-Dans le cadre du TP la configuration de telnetd pour xinetd a simplement consisté en l'installation de ces deux paquets. En effet, en installant telnet sur une machine xinetd s'installe automatiquement. De plus, l'installation créée automatiquement le fichier de configuration du service telnet pour xinetd dans le répertoire \texttt{/etc/xinet.d/telnet}. Dans ce fichier il faudra cependant mettre \texttt{no} à la place de \texttt{yes} à la ligne suivante :
+Dans le cadre du TP la configuration de telnetd pour xinetd a simplement consisté en l'installation de ces deux paquets. En effet, en installant le paquet telnetd sur une machine xinetd s'installe automatiquement. De plus, l'installation créée automatiquement le fichier de configuration du service telnet pour xinetd : \texttt{/etc/xinet.d/telnet}. Dans ce fichier il faudra cependant mettre \texttt{no} à la place de \texttt{yes} à la ligne suivante :
 \begin{lstlisting}
        disable		= no
 \end{lstlisting}
@@ -125,7 +125,7 @@ Nous voyons ici les échange SYN, SYN/ACK et ACK à l'initiative du client pour 
 \end{center}
 \end{figure}
 
-La figure précédente montre en détail le contenu TCP du paquet 15. Le client envoie l'Ack 55, c'est à dire qu'il attend l'octet 55 dans le prochain paquet. On remarque aussi la taille de la fenêtre (\og Windows size\fg) que est de 5888 octets. Dans le paquet suivant on voit qui le serveur envoie quant-à lui le paquet numéro 55 (Seq). Ce qui correspond bien aux attentes du client.
+La figure précédente montre en détail le contenu TCP du paquet 15. Le client envoie l'ACK 55, c'est à dire qu'il attend l'octet 55 dans le prochain paquet. On remarque aussi la taille de la fenêtre (\og Window size\fg) que est de 5888 octets. Dans le paquet suivant, on voit que le serveur envoie le paquet numéro 55 (Seq). Ce qui correspond bien aux attentes du client.
 
 \begin{figure}[!h]
 \begin{center}
