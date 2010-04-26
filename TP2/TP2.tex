@@ -75,7 +75,7 @@ On retrouve le paramétrage du service réseau dans le fichier : \texttt{/etc/in
 ### END INIT INFO
 \end{lstlisting}
 
-La ligne contenant chkconfig nous indique que ce service est par défaut démarré dans les runlevels 2, 3, 4 et 5 avec la priorité 10. De plus, il est stoppé dans les autres runlevels (1 et 6) avec la priorité 90. 
+La ligne contenant \textit{chkconfig} nous indique que ce service est par défaut démarré dans les runlevels 2, 3, 4 et 5 avec la priorité 10. De plus, il est stoppé dans les autres runlevels (1 et 6) avec la priorité 90. 
 
 \subsection{Exécution des scripts}
 
@@ -96,9 +96,10 @@ Dans ce cas, le service \texttt{network} ne démarrera pas dans le runlevel 5.
 
 
 \section{Partie 2 : le super-serveur xinetd}
+Le serveur xinetd permet d'économiser des ressources en stoppant temporairement les services qui ne sont pas utilisés. Quand il est installé et rattaché à un service, xinetd se met en écoute à la place du service et le redémarre pour traiter les requêtes qui lui sont destinées.
 \subsection{Configuration de telnetd}
  
-Dans le cadre du TP la configuration de telnetd pour xinetd a simplement consisté en l'installation de ces deux paquets. En effet, en installant le paquet telnetd sur une machine xinetd s'installe automatiquement. De plus, l'installation créée automatiquement le fichier de configuration du service telnet pour xinetd : \texttt{/etc/xinet.d/telnet}. Dans ce fichier il faudra cependant mettre \texttt{no} à la place de \texttt{yes} à la ligne suivante :
+Dans le cadre du TP la configuration de telnetd pour xinetd a simplement consisté en l'installation de ces deux paquets. En effet, en installant le paquet telnetd sur une machine xinetd s'installe automatiquement (sous Fedora). De plus, l'installation créée automatiquement le fichier de configuration du service telnet pour xinetd : \texttt{/etc/xinet.d/telnet}. Cependant, pour que le serveur telnet accepte des connexions, il faut indiquer dans ce fichier \texttt{no} à la place de \texttt{yes} à la ligne suivante :
 \begin{lstlisting}
        disable		= no
 \end{lstlisting}
@@ -111,7 +112,7 @@ Il est préférable de rattacher à xinetd des services qui sont peu utilisés, 
 \begin{center}
 \includegraphics[height=1cm]{syn_ack.png}
 \caption{Etablissement d'une connexion TCP pour telnet.}
-\label{fig:do}
+\label{fig:da}
 \end{center}
 \end{figure}
 
@@ -119,17 +120,17 @@ Nous voyons ici les échange SYN, SYN/ACK et ACK à l'initiative du client pour 
 
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[height=4cm]{pck15.png}
+\includegraphics[height=4.5cm]{pck15.png}
 \caption{Paquet numéro 15 de la communication TCP.}
-\label{fig:do}
+\label{fig:di}
 \end{center}
 \end{figure}
 
-La figure précédente montre en détail le contenu TCP du paquet 15. Le client envoie l'ACK 55, c'est à dire qu'il attend l'octet 55 dans le prochain paquet. On remarque aussi la taille de la fenêtre (\og Window size\fg) que est de 5888 octets. Dans le paquet suivant, on voit que le serveur envoie le paquet numéro 55 (Seq). Ce qui correspond bien aux attentes du client.
+La figure précédente montre en détail le contenu TCP du paquet 15. Le client envoie l'ACK 55, c'est à dire qu'il attend l'octet 55 dans le prochain paquet. On remarque aussi la taille de la fenêtre (\og Window size\fg) qui est de 5888 octets. Dans le paquet suivant (Figure \ref{fig:do}), on voit que le serveur envoie effectivement l'octet numéro 55 (Seq). Ce qui correspond bien aux attentes du client.
 
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[height=4cm]{pck16.png}
+\includegraphics[height=4.5cm]{pck16.png}
 \caption{Paquet numéro 16 de la communication TCP.}
 \label{fig:do}
 \end{center}
@@ -137,7 +138,7 @@ La figure précédente montre en détail le contenu TCP du paquet 15. Le client 
 
 \subsection{Filtrage d'accès}
 
-Il existe deux moyens pour filtrer l'accès à un service : 
+Ils existent deux moyens pour filtrer l'accès à un service : 
 \begin{itemize}
 \item via les fichiers \texttt{/etc/hosts.allow} et \texttt{/etc/hosts.deny} (utilisant le TCP Wrapper),
 \item dans le fichier de configuration du service.
@@ -145,7 +146,7 @@ Il existe deux moyens pour filtrer l'accès à un service :
 
 \subsubsection{\texttt{host.deny} et \texttt{host.allow}}
 
-\noindent Pré-requis : le fichier allow est prioritaire sur le fichier deny.\\
+\noindent Pré-requis : le fichier \textit{allow} est prioritaire sur le fichier \textit{deny}.\\
 
 \begin{lstlisting}
 # /etc/hosts.deny: list of hosts that are _not_ allowed to access the system.
@@ -182,7 +183,7 @@ La stratégie qui semble la plus sûre est celle utilisant un filtrage restricti
 
 \subsection{Attache à xinetd}
 
-Pour rattacher un nouveau service à xinetd, il suffit de créer un fichier de configuration dans \texttt{/etc/xinet.d/} en ajoutant le paramètre \texttt{server\_args = -i} et en stoppant le service ssh: \\
+Pour rattacher un nouveau service, ici ssh, à xinetd, il suffit de créer un fichier de configuration dans \texttt{/etc/xinet.d/} en ajoutant le paramètre \texttt{server\_args = -i} et en stoppant le service ssh: \\
 
 \begin{lstlisting}
 # default: on
