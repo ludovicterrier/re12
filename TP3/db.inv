@@ -1,0 +1,23 @@
+$TTL    604800
+@       IN      SOA     fire.deimos.fr. root.deimos.fr.     (
+                2010042701 ; Serial (date + incrementation)
+                7200       ; Refresh
+                3600       ; Retry
+                1209600    ; Expire
+                604800     ; Negative Cache TTL
+                )
+
+
+ A 192.168.3.1
+ A 192.168.3.129
+ A 192.168.3.254
+ A 192.168.3.126
+ NS 192.168.3.129
+ A 192.168.3.129
+
+
+1               PTR     pc-arnaud
+129               PTR     pc-ludo
+254               PTR     router-ludo
+126               PTR     router-arnaud
+

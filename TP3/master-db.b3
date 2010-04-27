@@ -1,0 +1,19 @@
+$TTL 3h
+@       IN      SOA     ns.b3.re12.fr. hostmaster.b3.re12.fr. (
+                                2005090202
+                                8H
+                                2H
+                                1W
+                                1D )
+
+@       IN      NS      ns.b3.re12.fr.
+
+@       IN      MX   10   mail.b3.re12.fr.
+
+pc-arnaud       IN A 192.168.3.1
+pc-ludo         IN A 192.168.3.129
+router-ludo     IN A 192.168.3.254
+router-arnaud   IN A 192.168.3.126
+ns              IN NS 192.168.3.129
+mail            IN A 192.168.3.129
+
