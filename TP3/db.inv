@@ -1,5 +1,5 @@
 $TTL    604800
-@       IN      SOA     fire.deimos.fr. root.deimos.fr.     (
+@       IN      SOA     ns.b3.re12.fr. root.b3.re12.fr.     (
                 2010042701 ; Serial (date + incrementation)
                 7200       ; Refresh
                 3600       ; Retry
