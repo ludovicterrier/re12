@@ -233,9 +233,6 @@ include "/etc/named.rfc1912.zones";
 \subsection{Configuration du resolver}
 Il suffit de remplacer l'adresse IP de l'ancien DNS présent dans le fichier \texttt{/etc/resolv.conf} par celle du serveur faisant office de relai. 
 
-
-
-
 \subsection{Fonctionnement du relai}
 
 \begin{figure}[!h]
@@ -252,14 +249,45 @@ Il suffit de remplacer l'adresse IP de l'ancien DNS présent dans le fichier \te
 
 \subsection{Configuration}
 
-Pour rattacher un nouveau service, ici ssh, à xinetd, il suffit de créer un fichier de configuration dans \texttt{/etc/xinet.d/} en ajoutant le paramètre \texttt{server\_args = -i} et en stoppant le service ssh: \\
+Pour pouvoir gérer la zone b3.re12.fr il faut effectuer deux opérations :
+\begin{itemize}
+\item ajouter dans le fichier \texttt{/etc/named.conf} la gestion de cette zone
+\item créer le fichier contenant l'ensemble des paramètres de la zone
+\end{itemize}
+
+\bigskip
+
+\subsubsection{Modification du fichier \texttt{/etc/named.conf}}
 
 \begin{lstlisting}
-# default: on
-service ssh
+zone "b3.re12.fr" IN {
+        type master;
+        file "db.b3.re12.fr";
+};
 \end{lstlisting}
 
-Après divers tests on s'aperçoit que le temps d'accès au service ssh n'est que sensiblement augmenté après le rattachement de celui-ci à xinetd.
+\subsubsection{Création du fichier \texttt{/var/name/b3.re12.fr}}
+
+\begin{lstlisting}
+$TTL 3h
+@       IN      SOA     ns.b3.re12.fr. hostmaster.b3.re12.fr. (
+                                2005090202
+                                8H
+                                2H
+                                1W
+                                1D )
+
+@       IN      NS      ns.b3.re12.fr.
+
+@       IN      MX   10   mail.b3.re12.fr.
+
+pc-arnaud       IN A 192.168.3.1
+pc-ludo         IN A 192.168.3.129
+router-ludo     IN A 192.168.3.254
+router-arnaud   IN A 192.168.3.126
+ns              IN NS 192.168.3.129
+mail            IN A 192.168.3.129
+\end{lstlisting}
 
 \subsection{La résolution inverse}
 
