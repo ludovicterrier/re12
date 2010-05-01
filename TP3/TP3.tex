@@ -231,18 +231,21 @@ include "/etc/named.rfc1912.zones";
 \end{lstlisting}
 
 \subsection{Configuration du resolver}
-Il est préférable
+Il suffit de remplacer l'adresse IP de l'ancien DNS présent dans le fichier \texttt{/etc/resolv.conf} par celle du serveur faisant office de relai. 
 
 
 
 
 \subsection{Fonctionnement du relai}
 
-Il ex
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[scale=0.61]{capture-via-relai}
+\caption{Requête DNS via un relai.}
+\label{fig:da}
+\end{center}
+\end{figure}
 
-
-
-La stratégie qui semble la plus sûre est celle utilisant un filtrage restrictif puisque l'on spécifie explicitement ce que l'on veut autoriser; donnant plus de contrôle sur les accès à destination de la machine.
 
 
 \section{Partie 3 : Résolution du domaine b3.re12.fr}
@@ -254,10 +257,6 @@ Pour rattacher un nouveau service, ici ssh, à xinetd, il suffit de créer un fi
 \begin{lstlisting}
 # default: on
 service ssh
-{
-       flags		= REUSE
-       socket_type	= stream
-}
 \end{lstlisting}
 
 Après divers tests on s'aperçoit que le temps d'accès au service ssh n'est que sensiblement augmenté après le rattachement de celui-ci à xinetd.
