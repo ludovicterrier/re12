@@ -266,7 +266,7 @@ zone "b3.re12.fr" IN {
 };
 \end{lstlisting}
 
-\subsubsection{Création du fichier \texttt{/var/name/b3.re12.fr}}
+\subsubsection{Création du fichier \texttt{/var/named/b3.re12.fr}}
 
 \begin{lstlisting}
 $TTL 3h
@@ -289,9 +289,42 @@ ns              IN NS 192.168.3.129
 mail            IN A 192.168.3.129
 \end{lstlisting}
 
+\clearpage
 \subsection{La résolution inverse}
 
+\subsubsection{Modification du fichier \texttt{/etc/named.conf}}
 
+\begin{lstlisting}
+zone "3.168.192.in-addr.arpa" IN {
+        type master;
+        file "db.3.168.192.in-addr.arpa";
+};
+\end{lstlisting}
+
+\subsubsection{Création du fichier \texttt{/var/named/db3.inv}}
+
+\begin{lstlisting}
+$TTL    604800
+@       IN      SOA     ns.b3.re12.fr. root.b3.re12.fr.     (
+                2010042701 ; Serial (date + incrementation)
+                7200       ; Refresh
+                3600       ; Retry
+                1209600    ; Expire
+                604800     ; Negative Cache TTL
+                )
+
+A 192.168.3.1
+A 192.168.3.129
+A 192.168.3.254
+A 192.168.3.126
+NS 192.168.3.129
+A 192.168.3.129
+
+1                 PTR     pc-arnaud
+129               PTR     pc-ludo
+254               PTR     router-ludo
+126               PTR     router-arnaud
+\end{lstlisting}
 
 
 \end{document}
