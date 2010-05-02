@@ -94,7 +94,7 @@
 \section{Partie 1 : Le DNS côté client}
 
 \subsection{Le fichier \texttt{/etc/resolv.conf}}
-Pour utiliser le DNS de l'UTT (ie. 193.50.230.240), il faut dans le fichier \texttt{/etc/resolv.conf} mettre : \\
+Pour utiliser le DNS de l'UTT (\texttt{193.50.230.240}), il faut mettre dans le fichier \texttt{/etc/resolv.conf} : \\
 
 \begin{lstlisting}[title=Contenu du fichier resolv.conf]
 nameserver 193.50.230.240
@@ -232,7 +232,7 @@ DNSSEC:Unsigned
 
 \clearpage
 \section{Partie 2 : Mise en \oe uvre d'un serveur relai}
-Le serveur
+%Le serveur
 \subsection{Installation de Bind9}
 
 \begin{lstlisting}[title=Contenu du fichier named.conf]
@@ -279,6 +279,8 @@ Il suffit de remplacer l'adresse IP de l'ancien DNS présent dans le fichier \te
 \end{center}
 \end{figure}
 
+Dans cette capture, on voit que le client effectue sa requête sur le serveur relai (\texttt{192.168.3.129}) et que ce dernier refait exactement la même à destination du serveur de l'UTT. Il reçoit ensuite la réponse, et la renvoie à l'identique au client. Le serveur fonctionne donc bien en mode relai, fonctionnalité qui est utile pour centraliser les requêtes et ainsi profiter du cache pour tous les utilisateurs. Mais cela permet également de connaître l'ensemble des demandes qui ont été réalisées.
+
 
 
 \section{Partie 3 : Résolution du domaine b3.re12.fr}
@@ -287,8 +289,8 @@ Il suffit de remplacer l'adresse IP de l'ancien DNS présent dans le fichier \te
 
 Pour pouvoir gérer la zone b3.re12.fr il faut effectuer deux opérations :
 \begin{itemize}
-\item ajouter dans le fichier \texttt{/etc/named.conf} la gestion de cette zone
-\item créer le fichier contenant l'ensemble des paramètres de la zone
+\item ajouter dans le fichier \texttt{/etc/named.conf} la gestion de cette zone,
+\item créer le fichier contenant l'ensemble des paramètres de la zone.
 \end{itemize}
 
 \bigskip
