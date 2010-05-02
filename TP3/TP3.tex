@@ -183,7 +183,8 @@ portail5.utbm.fr.       259200  IN      A       193.48.246.16
 
 \clearpage
 \subsection{L'outil whois}
-La commande whois permet de récupérer l'ensemble des informations concernant le propriétaire d'un nom de domaine.\\
+La commande whois permet de récupérer l'ensemble des informations concernant un nom de domaine telles que le propriétaire, qui le gère, les numéros à joindre ou la date d'expiration par exemple.
+Ci-dessous un exemple avec le domaine \texttt{fedoraproject.org} :\\
 \begin{lstlisting}[title=Résultat de la commande whois]
 Domain ID:D101496757-LROR
 Domain Name:FEDORAPROJECT.ORG
@@ -361,5 +362,37 @@ A 192.168.3.129
 126               PTR     router-arnaud
 \end{lstlisting}
 
+\section{Partie 4 : Mise en place d'un serveur secondaire}
+
+Dans cette partie, nous avons configurés un second serveur afin qu'il agisse comme un DNS secondaire. Au niveau de la configuration, il suffit d'indiquer dans le fichier \texttt{/etc/named.conf} que le contenu de la zone est à récupérer sur le serveur primaire (\texttt{ie. master}).\\
+
+
+\begin{lstlisting}[title=Configuration du serveur secondaire]
+zone "b3.re12.fr" IN {
+	type slave;
+	masters {192.168.3.129;} ;
+};
+\end{lstlisting}\bigskip
+\clearpage
+On peut ensuite vérifier le bon fonctionnement avec Wireshark :
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[scale=0.41]{dns-secondaire}
+\caption{Requête de transfert de zone via le serveur primaire.}
+\label{fig:da}
+\end{center}
+\end{figure}
+
+Dans cette capture, on voit que le serveur secondaire (\texttt{192.168.3.1}) effectue une requête de type AXFR pour récupérer les informations de la  zone b3.re12.fr.\\
+
+En regardant plus précisément le contenu de la réponse donnée par le serveur maître (\texttt{192.168.3.129}) on voit l'ensemble des enregistrements de la zone b3.re12.fr.
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[scale=0.7]{axfr}
+\caption{Qestion et réponse de la requête AXFR.}
+\label{fig:da}
+\end{center}
+\end{figure}
 
 \end{document}
