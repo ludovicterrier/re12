@@ -91,7 +91,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 1ère partie
-\section{Partie 1 : Le DNS côté client}
+\section{Le DNS côté client}
 
 \subsection{Le fichier \texttt{/etc/resolv.conf}}
 Pour utiliser le serveur DNS de l'UTT (\texttt{193.50.230.240}) depuis le réseau de l'UTT, il faut écrire dans le fichier \texttt{/etc/resolv.conf} : \\
@@ -242,7 +242,7 @@ DNSSEC:Unsigned
 \end{lstlisting}
 
 \clearpage
-\section{Partie 2 : Mise en \oe uvre d'un serveur DNS relai}
+\section{Mise en \oe uvre d'un serveur DNS relai}
 %Le serveur
 \subsection{Installation de Bind9}
 
@@ -313,7 +313,7 @@ Dans cette capture, on voit que le client effectue sa requête sur le serveur re
 
 
 
-\section{Partie 3 : Résolution du domaine b3.re12.fr}
+\section{Résolution du domaine b3.re12.fr}
 
 Nous allons à présent créer une zone b3.re12.fr gérée par notre machine faisant office de serveur DNS.
 
@@ -343,7 +343,7 @@ Ici, on signifie au serveur que le fichier de configuration de la zone b3.re12.f
 \begin{lstlisting}[title=Ensemble des paramètres de la zone]
 $TTL 3h
 @       IN      SOA     ns.b3.re12.fr. hostmaster.b3.re12.fr. (
-                                20100501102
+                                2010051102
                                 8H
                                 2H
                                 1W
@@ -404,9 +404,9 @@ A 192.168.3.129
 
 
 \clearpage
-\section{Partie 4 : Mise en place d'un serveur secondaire}
+\section{Mise en place d'un serveur secondaire}
 
-Dans cette partie, nous avons configurés un second serveur afin qu'il agisse comme un DNS secondaire (\texttt{slave}). Au niveau de la configuration, il suffit d'indiquer dans le fichier \texttt{/etc/named.conf} que le contenu de la zone est à récupérer sur le serveur primaire (i.e. \texttt{master}).\\
+Dans cette partie, nous avons configuré un second serveur afin qu'il agisse comme un DNS secondaire (\texttt{slave}). Au niveau de la configuration, il suffit d'indiquer dans le fichier \texttt{/etc/named.conf} que le contenu de la zone est à récupérer sur le serveur primaire (i.e. \texttt{master}).\\
 
 
 \begin{lstlisting}[title=Configuration du serveur secondaire]
