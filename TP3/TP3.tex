@@ -94,7 +94,7 @@
 \section{Partie 1 : Le DNS côté client}
 
 \subsection{Le fichier \texttt{/etc/resolv.conf}}
-Pour utiliser le DNS de l'UTT (\texttt{193.50.230.240}), il faut mettre dans le fichier \texttt{/etc/resolv.conf} : \\
+Pour utiliser le serveur DNS de l'UTT (\texttt{193.50.230.240}) depuis le réseau de l'UTT, il faut écrire dans le fichier \texttt{/etc/resolv.conf} : \\
 
 \begin{lstlisting}[title=Contenu du fichier resolv.conf]
 nameserver 193.50.230.240
@@ -102,19 +102,20 @@ search utt.fr
 \end{lstlisting}
 
 \bigskip
-On peut utiliser deux directives dans ce fichier :
+On peut renseigner plusieurs paramètres dans ce fichier, en voici trois exemples :
 \begin{itemize}
-\item search : ajoute automatiquement ce suffixe lors des résolutions
-\item domain : définit le domaine auquel appartient la machine
+\item nameserver : l'adresse du DNS à utiliser pars la machine,
+\item search : ajoute automatiquement ce suffixe lors des résolutions,
+\item domain : définit le domaine auquel appartient la machine.
 \end{itemize}
 
 
-\subsection{L'outils dig}
-Dig peut être utiliser pour effectuer différents types de requêtes.
+\subsection{L'outil dig}
+La commande \texttt{dig} permet d'effectuer des requêtes DNS et d'en lire le résultat à l'écran. On peut l'utiliser pour effectuer différents types de requêtes que l'on va aborder dans cette partie.
 
 \subsubsection{Directe}
 
-Une requête directe avec dig s'obtient avec la commande : \texttt{dig flickr.com in A}
+Une requête directe sur un nom de domaine s'obtient avec la commande : \texttt{dig nomDeDomaine in A}, voyons à présent le résultat de la requête : \texttt{dig flickr.com in A}
 \begin{lstlisting}[title=Résultat d'une requête directe]
 ;; QUESTION SECTION:
 ;flickr.com.                    IN      A
@@ -134,8 +135,18 @@ flickr.com.             76681   IN      NS      ns1.yahoo.com.
 ;; MSG SIZE  rcvd: 140
 \end{lstlisting}
 
+La réponse comporte quatre champs d'information :
+\begin{itemize}
+\item{Question section :} exprime sur une ligne un résumé de la requête effectuée,
+\item{Answer section :} c'est la réponse, contenant l'adresse (ou les adresses) IP de la machine testée (ici le serveur web de flickr.com), ainsi que le TTL\footnote{Time To Live}, durée de validité de l'information en secondes,
+\item{Authority section :} ce sont l'ensemble des serveurs DNS qui ont autorité sur la zone,
+\item{Informations :} Durée de la requête, l'adresse IP du serveur qui a répondu, la date, et la taille du message reçu (en octets).
+\end{itemize}
+
 \subsubsection{Inverse}
-Une requête inverse avec dig s'obtient avec la commande : \texttt{dig -x 193.50.230.240}\\
+ \texttt{dig} permet d'obtenir le nom de domaine associé à une adresse IP. Le résultat s'obtient avec la commande : \texttt{dig -x 193.50.230.240} ce qui est plus simple à utiliser que : 
+
+\noindent \texttt{dig 240.230.50.193.in-addr.arpa. in PTR}\\
 \begin{lstlisting}[title=Contenu d'une requête inverse]
 ;; QUESTION SECTION:
 ;240.230.50.193.in-addr.arpa.   IN      PTR
@@ -154,7 +165,7 @@ Une requête inverse avec dig s'obtient avec la commande : \texttt{dig -x 193.50
 \end{lstlisting}
 
 \subsubsection{Mail exchange}
-Une requête mail exchange avec dig s'obtient avec la commande : \texttt{dig utbm.fr in MX}\\
+On peut aussi tester l'adresse d'un serveur de mail via la requête mail exchange (MX), avec \texttt{dig} cela s'obtient avec la commande : \texttt{dig utbm.fr in MX}\\
 \begin{lstlisting}[title=Contenu d'une requête de type Exchange Mail]
 ;; QUESTION SECTION:
 ;utbm.fr.                       IN      MX
@@ -183,7 +194,7 @@ portail5.utbm.fr.       259200  IN      A       193.48.246.16
 
 \clearpage
 \subsection{L'outil whois}
-La commande whois permet de récupérer l'ensemble des informations concernant un nom de domaine telles que le propriétaire, qui le gère, les numéros à joindre ou la date d'expiration par exemple.
+La commande \texttt{whois} permet de récupérer l'ensemble des informations concernant un nom de domaine telles que le propriétaire, le nom de l'organisation qui le gère, le nom des personnes à joindre en cas de réclamation ou problème, accompagné de leur numéro de téléphone et la date d'expiration par exemple.
 Ci-dessous un exemple avec le domaine \texttt{fedoraproject.org} :\\
 \begin{lstlisting}[title=Résultat de la commande whois]
 Domain ID:D101496757-LROR
@@ -231,10 +242,11 @@ DNSSEC:Unsigned
 \end{lstlisting}
 
 \clearpage
-\section{Partie 2 : Mise en \oe uvre d'un serveur relai}
+\section{Partie 2 : Mise en \oe uvre d'un serveur DNS relai}
 %Le serveur
 \subsection{Installation de Bind9}
 
+L'installation du serveur Bind9 se fait, en root, via la commande : \texttt{yum install bind}
 \begin{lstlisting}[title=Contenu du fichier named.conf]
 options {
         listen-on port 53 { 192.168.3.129; };
@@ -266,8 +278,26 @@ zone "." IN {
 include "/etc/named.rfc1912.zones";
 \end{lstlisting}
 
+Après avoir installé le serveur \texttt{bind} il suffit d'éditer le fichier \texttt{/etc/named.conf} en y ajoutant la partie : 
+\begin{center}
+	\begin{verbatim}
+	forwarders {
+		193.50.230.240 port 53;
+		};
+	\end{verbatim}
+\end{center}
+
+Ceci signifie que toutes les requêtes DNS qui vont être faites à cette machine seront transférées au serveur DNS de l'UTT :  193.50.230.240.\\
+
+Cependant pour que le serveur écoute l'interface connectée, on doit aussi ajouter :
+\begin{verbatim}
+listen-on	port	53	{	192.168.3.129;	};
+\end{verbatim}
+
+
+
 \subsection{Configuration du resolver}
-Il suffit de remplacer l'adresse IP de l'ancien DNS présent dans le fichier \texttt{/etc/resolv.conf} par celle du serveur faisant office de relai. 
+Pour que le serveur que nous venons de configurer soit utilisé par les machines de notre réseau, il suffit de remplacer l'adresse IP de l'ancien DNS présent dans le fichier \texttt{/etc/resolv.conf} par celle du serveur faisant office de relai (ici 192.168.1.129). 
 
 \subsection{Fonctionnement du relai}
 
@@ -284,6 +314,8 @@ Dans cette capture, on voit que le client effectue sa requête sur le serveur re
 
 
 \section{Partie 3 : Résolution du domaine b3.re12.fr}
+
+Nous allons à présent créer une zone b3.re12.fr gérée par notre machine faisant office de serveur DNS.
 
 \subsection{Configuration}
 
@@ -304,12 +336,14 @@ zone "b3.re12.fr" IN {
 };
 \end{lstlisting}
 
-\subsubsection{Création du fichier \texttt{/var/named/b3.re12.fr}}
+Ici, on signifie au serveur que le fichier de configuration de la zone b3.re12.fr se nomme : db.b3.re12.fr. Voir le début du fichier \texttt{/etc/named.conf} qui indique que le serveur bind trouvera les configurations des zones dans le dossier \texttt{/var/named}
+
+\subsubsection{Création du fichier \texttt{/var/named/db.b3.re12.fr}}
 
 \begin{lstlisting}[title=Ensemble des paramètres de la zone]
 $TTL 3h
 @       IN      SOA     ns.b3.re12.fr. hostmaster.b3.re12.fr. (
-                                2005090202
+                                20100501102
                                 8H
                                 2H
                                 1W
@@ -327,10 +361,14 @@ ns              IN NS 192.168.3.129
 mail            IN A 192.168.3.129
 \end{lstlisting}
 
+Ainsi, dans ce fichier on renseigne les paramètres de conservation de la réponse DNS,  le nom du serveur DNS de la zone (champ NS), le nom du serveur de mails (champ MX) et enfin la correspondance entre toutes les machines que l'ont souhaite gérer avec leur adresse IP. 
+
 \clearpage
 \subsection{La résolution inverse}
 
 \subsubsection{Modification du fichier \texttt{/etc/named.conf}}
+
+On ajoute ce bloc au fichier \texttt{/etc/named.conf} afin que le serveur prenne en compte la résolution inverse.
 
 \begin{lstlisting}[title=Ajout de la zone inverse à gérer]
 zone "3.168.192.in-addr.arpa" IN {
@@ -340,7 +378,7 @@ zone "3.168.192.in-addr.arpa" IN {
 \end{lstlisting}
 
 \subsubsection{Création du fichier \texttt{/var/named/db3.inv}}
-
+De la même manière que pour la résolution directe, on créé un fichier contenant les informations relatives à la validité des réponses ainsi que la correspondance entre l'adresse IP et le nom des machines. (PTR désignant la requête inverse).
 \begin{lstlisting}[title=Paramètres de la zone inverse]
 $TTL    604800
 @       IN      SOA     ns.b3.re12.fr. root.b3.re12.fr.     (
@@ -364,9 +402,11 @@ A 192.168.3.129
 126               PTR     router-arnaud
 \end{lstlisting}
 
+
+\clearpage
 \section{Partie 4 : Mise en place d'un serveur secondaire}
 
-Dans cette partie, nous avons configurés un second serveur afin qu'il agisse comme un DNS secondaire. Au niveau de la configuration, il suffit d'indiquer dans le fichier \texttt{/etc/named.conf} que le contenu de la zone est à récupérer sur le serveur primaire (\texttt{ie. master}).\\
+Dans cette partie, nous avons configurés un second serveur afin qu'il agisse comme un DNS secondaire (\texttt{slave}). Au niveau de la configuration, il suffit d'indiquer dans le fichier \texttt{/etc/named.conf} que le contenu de la zone est à récupérer sur le serveur primaire (i.e. \texttt{master}).\\
 
 
 \begin{lstlisting}[title=Configuration du serveur secondaire]
@@ -375,23 +415,22 @@ zone "b3.re12.fr" IN {
 	masters {192.168.3.129;} ;
 };
 \end{lstlisting}\bigskip
-\clearpage
 On peut ensuite vérifier le bon fonctionnement avec Wireshark :
 
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[scale=0.41]{dns-secondaire}
-\caption{Requête de transfert de zone via le serveur primaire.}
+\includegraphics[scale=0.43]{dns-secondaire}
+\caption{Requête de transfert de zone par le serveur secondaire.}
 \label{fig:da}
 \end{center}
 \end{figure}
 
-Dans cette capture, on voit que le serveur secondaire (\texttt{192.168.3.1}) effectue une requête de type AXFR pour récupérer les informations de la  zone b3.re12.fr.\\
+Dans cette capture, on voit que le serveur secondaire (\texttt{192.168.3.1}) effectue une requête de type \texttt{AXFR} pour récupérer les informations de la  zone b3.re12.fr.\\
 
 En regardant plus précisément le contenu de la réponse donnée par le serveur maître (\texttt{192.168.3.129}) on voit l'ensemble des enregistrements de la zone b3.re12.fr.
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[scale=0.7]{axfr}
+\includegraphics[scale=0.55]{axfr}
 \caption{Qestion et réponse de la requête AXFR.}
 \label{fig:da}
 \end{center}
