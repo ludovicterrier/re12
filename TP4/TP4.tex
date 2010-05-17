@@ -139,15 +139,70 @@ rootpw           {SSHA}RqOzsduTTgQX9eVbo1FDHpUaZEIdyd77
 Le champ  \texttt{rootpw} est complété grâce à la commande \texttt{slappasswd} qui permet de générer un hash pour un mot de passe donné. Ceci permet de ne pas laisser le mot de passe administrateur en clair dans le fichier de configuration.\\
 
 
-\subsection{Configuration du resolver}
-Pour que le serveur que nous venons de configurer soit utilisé par les machines de notre réseau, il suffit de remplacer l'adresse IP de l'ancien DNS présent dans le fichier \texttt{/etc/resolv.conf} par celle du serveur faisant office de relai (ici 192.168.1.129). 
+\subsection{Peuplement de l'annuaire}
+Dans un premier temps on crée la racine de l'annuaire :
 
-\subsection{Fonctionnement du relai}
+\subsubsection{Ajout de la racine}
+
+\begin{lstlisting}[title=racine.ldif]
+dn: dc=musicschool,dc=fr
+objectClass: dcObject
+objectClass: organization
+o: Musicschool
+description: Une ecole de musique 
+dc: musicschool 
+\end{lstlisting}
 
 
-Dans cette capture, on voit que le client effectue sa requête sur le serveur relai (\texttt{192.168.3.129}) et que ce dernier refait exactement la même à destination du serveur de l'UTT. Il reçoit ensuite la réponse, et la renvoie à l'identique au client. Le serveur fonctionne donc bien en mode relai, fonctionnalité qui est utile pour centraliser les requêtes et ainsi profiter du cache pour tous les utilisateurs. Mais cela permet également de connaître l'ensemble des demandes qui ont été réalisées.
+\subsubsection{Ajout de l'OU people}
 
+\begin{lstlisting}[title=people.ldif]
+dn: sn=Doussot,ou=people,dc=musicschool,dc=fr
+cn: Michel Doussot
+objectClass: top
+objectClass: inetOrgPerson
+sn: Doussot
 
+dn: sn=Ploix,ou=people,dc=musicschool,dc=fr
+cn: Alain Ploix
+objectClass: top
+objectClass: inetOrgPerson
+sn: Ploix
+\end{lstlisting}
+
+\subsubsection{Ajout de l'OU rôle}
+
+\begin{lstlisting}[title=role.ldif]
+dn: ou=roles,dc=musicschool,dc=fr
+objectClass: top
+objectClass: organizationalUnit
+ou: roles
+
+dn: cn=eleves,ou=roles,dc=musicschool,dc=fr
+objectClass: groupOfUniqueNames
+cn: eleves
+uniqueMember: sn=Ploix,ou=people,dc=musicshool,dc=fr
+
+dn: cn=profs,ou=roles,dc=musicschool,dc=fr
+objectClass: groupOfUniqueNames
+cn: profs
+uniqueMember: sn=Doyen,ou=people,dc=musicshool,dc=fr
+\end{lstlisting}
+
+\subsubsection{Ajout de l'OU classe}
+
+\begin{lstlisting}[title=classe.ldif]
+dn: ou=classe,dc=musicschool,dc=fr
+objectClass: top
+objectClass: organizationalUnit
+ou: classe
+
+dn: cn=violon,ou=classe,dc=musicschool,dc=fr
+objectClass: groupOfUniqueNames
+cn: violon
+uniqueMember: sn=Ploix,ou=people,dc=musicshool,dc=fr
+uniqueMember: sn=Doyen,ou=people,dc=musicshool,dc=fr
+\end{lstlisting}
 
 \section{Intégration avec une application de courrier électronique}
 
