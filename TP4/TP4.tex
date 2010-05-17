@@ -1,0 +1,261 @@
+\documentclass[12pt,a4paper,notitlepage]{article}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage[francais]{babel}\usepackage[T1]{fontenc}
+\usepackage[cyr]{aeguill}
+\usepackage{lmodern}
+\usepackage{color}
+\usepackage{boites}
+\usepackage{caption}
+\usepackage{fancybox}
+\usepackage{listings}
+%\lstset{language=bash, basicstyle=\footnotesize, frame=shadowbox, rulesepcolor=\color{gris}, captionpos=b}
+
+  \lstset{
+         basicstyle=\footnotesize\ttfamily, % Standardschrift
+         %numbers=left,               % Ort der Zeilennummern
+         numberstyle=\tiny,          % Stil der Zeilennummern
+         %stepnumber=2,               % Abstand zwischen den Zeilennummern
+         numbersep=5pt,              % Abstand der Nummern zum Text
+         tabsize=2,                  % Groesse von Tabs
+         extendedchars=true,         %
+         breaklines=true,            % Zeilen werden Umgebrochen
+         keywordstyle=\color{red},
+                frame=b,         
+         keywordstyle=[1]{\itshape}{//},    % Stil der Keywords
+         stringstyle=\color{white}\ttfamily, % Farbe der String
+         showspaces=false,           % Leerzeichen anzeigen ?
+         showtabs=false,             % Tabs anzeigen ?
+         xleftmargin=5pt,
+         framexleftmargin=1pt,
+         framexrightmargin=5pt,
+         %numbers=left,
+         frame=toplines,
+         framextopmargin=3pt,
+       %  framexleftmargin=8pt,
+         numberblanklines=false,
+         %morecomment=[s][marron]{/*}{*/},
+         %moredelim=*[s][\color{blue}]{/*}{*/}
+         %morecomment=[s][marron]{/*-}{*/}},         
+         framexbottommargin=5pt,
+         captionpos=b,
+         %backgroundcolor=\color{lightgray},
+         showstringspaces=false      % Leerzeichen in Strings anzeigen ? 
+ }
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{10pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+
+\definecolor{gris}{gray}{0.75}
+%\definecolor{bleup}{HTML}{258EE9}
+
+
+%\renewcommand*\familydefault{\ttdefault} %% Only if the base font of the document is to be typewriter style
+%\renewcommand{\rmdefault}{ptm}
+
+
+\usepackage[
+   pdfauthor={Ludovic Terrier & Arnaud Goulut},
+   pdftitle={RE12 - TP2},
+   ]{hyperref}
+   
+   
+\usepackage[pdftex]{graphicx}
+
+%\usepackage{titlesec}
+%\titleformat{\section}[frame] {\normalfont} {\filright
+%\footnotesize
+%\enspace\textbf{\thesection}\enspace} {8pt} {\Large\bfseries\filcenter}
+
+%% Je contrôle la taille de ma zone imprimée...
+\usepackage{anysize}
+%% ...en définissants les marges {gauche}{droite}{haute}{basse}
+\marginsize{25mm}{15mm}{10mm}{15mm}
+
+\begin{document}
+
+\title{Mise en \oe uvre d'un annuaire LDAP}
+\author{Arnaud Goulut et Ludovic Terrier}
+\date{Mai 2010}
+\maketitle
+
+
+%\tableofcontents
+
+\thispagestyle{empty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  1ère page 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 1ère partie
+\section{Connexion à un annuaire existant}
+
+\subsection{Installation du client LDAP admin tool}
+Pour utiliser le serveur DNS de l'UTT (\texttt{193.50.230.240}) depuis le réseau de l'UTT, il faut écrire dans le fichier \texttt{/etc/resolv.conf} : \\
+
+\begin{lstlisting}[title=Contenu du fichier resolv.conf]
+nameserver 193.50.230.240
+search utt.fr
+\end{lstlisting}
+
+\bigskip
+On peut renseigner plusieurs paramètres dans ce fichier, en voici trois exemples :
+\begin{itemize}
+\item nameserver : l'adresse du DNS à utiliser pars la machine,
+\item search : ajoute automatiquement ce suffixe lors des résolutions,
+\item domain : définit le domaine auquel appartient la machine.
+\end{itemize}
+
+
+\subsection{L'outil dig}
+La commande \texttt{dig} permet d'effectuer des requêtes DNS et d'en lire le résultat à l'écran. On peut l'utiliser pour effectuer différents types de requêtes que l'on va aborder dans cette partie.
+
+
+
+\clearpage
+\subsection{L'outil whois}
+La commande \texttt{whois} permet de récupérer l'ensemble des informations concernant un nom de domaine telles que le propriétaire, le nom de l'organisation qui le gère, le nom des personnes à joindre en cas de réclamation ou problème, accompagné de leur numéro de téléphone et la date d'expiration par exemple.
+Ci-dessous un exemple avec le domaine \texttt{fedoraproject.org} :\\
+
+\clearpage
+\section{Mise en \oe uvre d'un serveur}
+%Le serveur
+\subsection{Installation d' OpenLDAP}
+
+L'installation du serveur LDAP se fait, en root, via la commande : \texttt{yum install openldap}\\
+
+Après avoir installé le serveur \texttt{openldap} il suffit d'éditer le fichier \texttt{/etc/openldap/slapd.conf} en y ajoutant la partie : 
+
+\begin{lstlisting}[title=Contenu du fichier slapd.conf]
+suffix          "dc=musicschool,dc=fr"
+rootdn          "cn=admin,dc=musicschool,dc=fr"
+rootpw           {SSHA}RqOzsduTTgQX9eVbo1FDHpUaZEIdyd77
+
+\end{lstlisting}
+
+Le champ  \texttt{rootpw} est complété grâce à la commande \texttt{slappasswd} qui permet de générer un hash pour un mot de passe donné. Ceci permet de ne pas laisser le mot de passe administrateur en clair dans le fichier de configuration.\\
+
+
+\subsection{Configuration du resolver}
+Pour que le serveur que nous venons de configurer soit utilisé par les machines de notre réseau, il suffit de remplacer l'adresse IP de l'ancien DNS présent dans le fichier \texttt{/etc/resolv.conf} par celle du serveur faisant office de relai (ici 192.168.1.129). 
+
+\subsection{Fonctionnement du relai}
+
+
+Dans cette capture, on voit que le client effectue sa requête sur le serveur relai (\texttt{192.168.3.129}) et que ce dernier refait exactement la même à destination du serveur de l'UTT. Il reçoit ensuite la réponse, et la renvoie à l'identique au client. Le serveur fonctionne donc bien en mode relai, fonctionnalité qui est utile pour centraliser les requêtes et ainsi profiter du cache pour tous les utilisateurs. Mais cela permet également de connaître l'ensemble des demandes qui ont été réalisées.
+
+
+
+\section{Intégration avec une application de courrier électronique}
+
+Dans cette partie, nous allons voir comment utiliser nos données stockées dans l'annuaire dans une utilisation de la vie courante : envoyer des emails.
+\subsection{Installation de thunderbird}
+
+Avant de commencer, il faut installer le client de messagerie :
+\begin{verbatim}
+yum install thunderbird
+\end{verbatim}
+
+
+\bigskip
+
+\subsubsection{Modification du fichier \texttt{/etc/named.conf}}
+
+\begin{lstlisting}[title=Lignes à ajouter]
+zone "b3.re12.fr" IN {
+        type master;
+        file "db.b3.re12.fr";
+};
+\end{lstlisting}
+
+Ici, on signifie au serveur que le fichier de configuration de la zone b3.re12.fr se nomme : db.b3.re12.fr. Voir le début du fichier \texttt{/etc/named.conf} qui indique que le serveur bind trouvera les configurations des zones dans le dossier \texttt{/var/named}
+
+\subsubsection{Création du fichier \texttt{/var/named/db.b3.re12.fr}}
+
+\begin{lstlisting}[title=Ensemble des paramètres de la zone]
+$TTL 3h
+@       IN      SOA     ns.b3.re12.fr. hostmaster.b3.re12.fr. (
+                                2010051102
+                                8H
+                                2H
+                                1W
+                                1D )
+
+@       IN      NS      ns.b3.re12.fr.
+
+@       IN      MX   10   mail.b3.re12.fr.
+
+pc-arnaud       IN A 192.168.3.1
+pc-ludo         IN A 192.168.3.129
+router-ludo     IN A 192.168.3.254
+router-arnaud   IN A 192.168.3.126
+ns              IN NS 192.168.3.129
+mail            IN A 192.168.3.129
+\end{lstlisting}
+
+Ainsi, dans ce fichier on renseigne les paramètres de conservation de la réponse DNS,  le nom du serveur DNS de la zone (champ NS), le nom du serveur de mails (champ MX) et enfin la correspondance entre toutes les machines que l'ont souhaite gérer avec leur adresse IP. 
+
+\clearpage
+\subsection{La résolution inverse}
+
+\subsubsection{Modification du fichier \texttt{/etc/named.conf}}
+
+On ajoute ce bloc au fichier \texttt{/etc/named.conf} afin que le serveur prenne en compte la résolution inverse.
+
+\begin{lstlisting}[title=Ajout de la zone inverse à gérer]
+zone "3.168.192.in-addr.arpa" IN {
+        type master;
+        file "db.3.168.192.in-addr.arpa";
+};
+\end{lstlisting}
+
+\subsubsection{Création du fichier \texttt{/var/named/db3.inv}}
+De la même manière que pour la résolution directe, on créé un fichier contenant les informations relatives à la validité des réponses ainsi que la correspondance entre l'adresse IP et le nom des machines. (PTR désignant la requête inverse).
+\begin{lstlisting}[title=Paramètres de la zone inverse]
+$TTL    604800
+@       IN      SOA     ns.b3.re12.fr. root.b3.re12.fr.     (
+                2010042701 ; Serial (date + incrementation)
+                7200       ; Refresh
+                3600       ; Retry
+                1209600    ; Expire
+                604800     ; Negative Cache TTL
+                )
+
+A 192.168.3.1
+A 192.168.3.129
+A 192.168.3.254
+A 192.168.3.126
+NS 192.168.3.129
+A 192.168.3.129
+
+1                 PTR     pc-arnaud
+129               PTR     pc-ludo
+254               PTR     router-ludo
+126               PTR     router-arnaud
+\end{lstlisting}
+
+
+\clearpage
+\section{Mise en place d'un serveur secondaire}
+
+Dans cette partie, nous avons configuré un second serveur afin qu'il agisse comme un DNS secondaire (\texttt{slave}). Au niveau de la configuration, il suffit d'indiquer dans le fichier \texttt{/etc/named.conf} que le contenu de la zone est à récupérer sur le serveur primaire (i.e. \texttt{master}).\\
+
+
+\begin{lstlisting}[title=Configuration du serveur secondaire]
+zone "b3.re12.fr" IN {
+	type slave;
+	masters {192.168.3.129;} ;
+};
+\end{lstlisting}\bigskip
+On peut ensuite vérifier le bon fonctionnement avec Wireshark :
+
+
+Dans cette capture, on voit que le serveur secondaire (\texttt{192.168.3.1}) effectue une requête de type \texttt{AXFR} pour récupérer les informations de la  zone b3.re12.fr.\\
+
+En regardant plus précisément le contenu de la réponse donnée par le serveur maître (\texttt{192.168.3.129}) on voit l'ensemble des enregistrements de la zone b3.re12.fr.
+
+
+\end{document}
