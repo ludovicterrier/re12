@@ -143,14 +143,62 @@ Pour un élève on retrouve les informations suivantes :
 
   
 \subsection{Recherche dans un annuaire}
-Blablala
+Ici, nous avons effectué une recherche de tout les Common Name commençant par \og A \fg\ (cn=A*) dans ou=Juinor, ou=Student, ou=People, o=Baylor University, c=US
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[scale=0.61]{recherche}
+\caption{Résultat d'une recherche dans LDAP Admin Tools.}
+\label{fig:da}
+\end{center}
+\end{figure}
 
 \subsection{Exportation LDIF}
 
+Voici l'exportation LDIF pour un élève de l'Université de Baylor :\\
+\begin{lstlisting}[title=Export LDIF d'une entrée élève]
+dn: cn=Allison Winney, ou=Junior, ou=Student, ou=People, o=Baylor University, c=US
+krbname: Allison_Winney
+seealso:: PEEgSFJFRj0iaHR0cDovL3d3dzYuYmF5bG9yLmVkdS9kaXJlY3RvcnkvZGlyZWN0b3
+ J5LnRhZj9kaXJpZDI9MTEwMDM0NzE4JnN0YXJ0cm93PTEiPkV4cGFuZGVkIER
+ pcmVjdG9yeSBMaXN0aW5nPC9BPg==
+pid: 110034718
+initials: AKW
+sn: Winney
+ou: People
+ou: Student
+ou: Junior
+mail: Allison_Winney@baylor.edu
+major: Political Science
+major: Geology
+givenname: Allison
+givenname: Allison K
+uid: Allison_Winney
+classification: Junior
+cn: Allison Winney
+cn: Allison K Winney
+objectclass: top
+objectclass: person
+objectclass: organizationalperson
+objectclass: inetorgperson
+objectclass: baylorperson
+\end{lstlisting}
+
+Dans ce fichier sont listés tous les attributs accompagnés de leur valeur.
 
 \clearpage
 \section{Mise en \oe uvre d'un serveur}
 %Le serveur
+
+Le but de ce TP est de mettre en place l'architecture LDAP suivante :
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[scale=0.64]{tpldap}
+\caption{Représentation.}
+\end{center}
+\end{figure}
+
+
 \subsection{Installation d' OpenLDAP}
 
 L'installation du serveur LDAP se fait, en root, via la commande : \texttt{yum install openldap}\\
@@ -168,11 +216,20 @@ Le champ  \texttt{rootpw} est complété grâce à la commande \texttt{slappassw
 
 
 \subsection{Peuplement de l'annuaire}
-Dans cette partie, nous allons voir comment ajouter et supprimer des utilisateurs de notre annuaire via l'outil \texttt{ldapadd}.\\
+Dans cette partie, nous allons voir comment ajouter et supprimer des utilisateurs dans notre annuaire via l'outil \texttt{ldapadd}.\\
 
 Une fois le fichier LDIF créé, on l'ajoute à l'annuaire avec la commande :
 
-\noindent \texttt{ldapadd -x -D "cn=admin,dc=musicschool,dc=fr" -W -f racine.ldif}
+\noindent \texttt{ldapadd -x -D "cn=admin,dc=musicschool,dc=fr" -W -f racine.ldif}\\
+
+Explications de la commande :
+\begin{itemize}
+\item -x : utilisation de l'authentification simple
+\item -D : permet de préciser l'utilisateur faisant l'opération
+\item -W : évite de donner le mot de passe dans la commande
+\item -f précise le fichier LDIF utilisé 
+\end{itemize}
+
 
 \subsubsection{Ajout de la racine}
 
@@ -189,6 +246,11 @@ dc: musicschool
 \subsubsection{Ajout de l'OU people}
 
 \begin{lstlisting}[title=people.ldif]
+dn: ou=people,dc=musicschool,dc=fr
+objectClass: top
+objectClass: organizationalUnit
+ou: people
+
 dn: sn=Doussot,ou=people,dc=musicschool,dc=fr
 cn: Michel Doussot
 objectClass: top
