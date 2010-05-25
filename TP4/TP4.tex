@@ -10,6 +10,8 @@
 \usepackage{caption}
 \usepackage{fancybox}
 \usepackage{listings}
+\usepackage{multicol}
+
 %\lstset{language=bash, basicstyle=\footnotesize, frame=shadowbox, rulesepcolor=\color{gris}, captionpos=b}
 
   \lstset{
@@ -58,7 +60,7 @@
 
 \usepackage[
    pdfauthor={Ludovic Terrier & Arnaud Goulut},
-   pdftitle={RE12 - TP2},
+   pdftitle={RE12 - TP4},
    ]{hyperref}
    
    
@@ -102,7 +104,7 @@ user@machine  ./LdapAdminTool-4.6.1.x-Linux-x86-Install.bin}
 
 
 \subsection{Connexion anonyme à un annuaire}
-Pour se connecter de manière anonyme à un annuair LDAP, on renseigne les champs :
+Pour se connecter de manière anonyme à un annuaire LDAP, on renseigne les champs :
 
 \begin{itemize}
 \item hôte : \textbf{ldap.baylor.edu}
@@ -111,18 +113,18 @@ Pour se connecter de manière anonyme à un annuair LDAP, on renseigne les champ
 
 \bigskip
 
-L'annuaire est organisé selon le modèle pays / organisation. \\
+L'annuaire est organisé selon le modèle pays/organisation. \\
 
 L'objet racine contient :
 \begin{itemize}
-\item o : pour Organisation, précise le nom de l'organisation : ici Baylor University
-\item aci : pour Access Control Item, qui définit le contrôle aux accès pour chaque objet
-\item objectclass organization
-\item objectclass top
+\item o : pour Organization, précise le nom de l'organisation concernée : ici Baylor University,
+\item aci : pour \textit{Access Control Item}, qui définit le contrôle aux accès pour chaque objet,
+\item objectclass organization,
+\item objectclass top.\\
 \end{itemize}
-\bigskip
-Pour un élève on retrouve les informations suivantes :
 
+Pour un étudiant de l'université on retrouve les informations suivantes :
+%\begin{multicols}{2}
 \begin{itemize}
 \item objectclass : baylorperson
 \item objectclass : inetorgperson
@@ -140,10 +142,10 @@ Pour un élève on retrouve les informations suivantes :
 \item pid : 100004149
 \item uid : Theresa-Bennett
 \end{itemize}
-
+%\end{multicols}
   
 \subsection{Recherche dans un annuaire}
-Ici, nous avons effectué une recherche de tout les Common Name commençant par \og A \fg\ (cn=A*) dans ou=Juinor, ou=Student, ou=People, o=Baylor University, c=US
+Ici, nous avons effectué une recherche de tous les Common Name commençant par \og A \fg\ (cn=A*) dans \textit{ou=Junior, ou=Student, ou=People, o=Baylor University, c=US}.
 
 \begin{figure}[!h]
 \begin{center}
@@ -152,7 +154,9 @@ Ici, nous avons effectué une recherche de tout les Common Name commençant par 
 \label{fig:da}
 \end{center}
 \end{figure}
+%\vspace{5cm}
 
+Ainsi, nous pouvons déduire que parmi les nouveaux (\textit{Junior}) seules deux personnes ont un cn qui commence par \og A \fg\ (on peut aussi imaginer que c'est leur prénom).
 \subsection{Exportation LDIF}
 
 Voici l'exportation LDIF pour un élève de l'Université de Baylor :\\
@@ -224,10 +228,10 @@ Une fois le fichier LDIF créé, on l'ajoute à l'annuaire avec la commande :
 
 Explications de la commande :
 \begin{itemize}
-\item -x : utilisation de l'authentification simple
-\item -D : permet de préciser l'utilisateur faisant l'opération
-\item -W : évite de donner le mot de passe dans la commande
-\item -f précise le fichier LDIF utilisé 
+\item -x : utilisation de l'authentification simple,
+\item -D : permet de préciser l'utilisateur effectuant l'opération,
+\item -W : évite de donner le mot de passe dans la commande,
+\item -f précise le fichier LDIF utilisé. 
 \end{itemize}
 
 
@@ -243,7 +247,7 @@ dc: musicschool
 \end{lstlisting}
 
 
-\subsubsection{Ajout de l'OU people}
+\subsubsection{Ajout de l'OU (OrganizationalUnit) people}
 
 \begin{lstlisting}[title=people.ldif]
 dn: ou=people,dc=musicschool,dc=fr
@@ -262,7 +266,15 @@ cn: Alain Ploix
 objectClass: top
 objectClass: inetOrgPerson
 sn: Ploix
+
+dn: sn=Doyen,ou=people,dc=musicschool,dc=fr
+cn: Guillaume Doyen
+objectClass: top
+objectClass: inetOrgPerson
+sn: Doyen
+
 \end{lstlisting}
+Nous ajoutons ici, l'OU people ainsi que trois membres du groupe : Michel Doussot, Guillaume Doyen et Alain Ploix.
 
 \subsubsection{Ajout de l'OU rôle}
 
@@ -276,13 +288,14 @@ dn: cn=eleves,ou=roles,dc=musicschool,dc=fr
 objectClass: groupOfUniqueNames
 cn: eleves
 uniqueMember: sn=Ploix,ou=people,dc=musicshool,dc=fr
+uniqueMember: sn=Doyen,ou=people,dc=musicshool,dc=fr
 
 dn: cn=profs,ou=roles,dc=musicschool,dc=fr
 objectClass: groupOfUniqueNames
 cn: profs
-uniqueMember: sn=Doyen,ou=people,dc=musicshool,dc=fr
+uniqueMember: sn=Doussot,ou=people,dc=musicshool,dc=fr
 \end{lstlisting}
-
+Dans cette partie nous ajoutons deux rôles dans l'organisation de l'école de musique : les profs mais aussi les élèves. Avec l'attribut \textit{uniqueMember} nous affectons par la même occasion des membres de l'OU people à des rôles. M. Doussot devient prof, tandis que A. Ploix et G. Doyen sont des élèves.
 \subsubsection{Ajout de l'OU classe}
 
 \begin{lstlisting}[title=classe.ldif]
@@ -294,12 +307,13 @@ ou: classe
 dn: cn=violon,ou=classe,dc=musicschool,dc=fr
 objectClass: groupOfUniqueNames
 cn: violon
+uniqueMember: sn=Doussot,ou=people,dc=musicshool,dc=fr
 uniqueMember: sn=Ploix,ou=people,dc=musicshool,dc=fr
 uniqueMember: sn=Doyen,ou=people,dc=musicshool,dc=fr
 \end{lstlisting}
-
+En plus des rôles on peut affecter des personnes a des classes. Une personne dont le rôle est prof est affecté à une classe (de violon par exemple), c'est aussi le cas de plusieurs élèves.
 \subsubsection{Suppression de l'OU classe}
-
+Ci-dessous se trouve la ligne à indiquer dans un fichier LDIF pour supprimer l'OU classe (choisie arbitrairement pour l'exemple) : 
 \begin{lstlisting}[title=delete-classe.ldif]
 dn: ou=classe,dc=musicschool,dc=fr
 changetype: delete
@@ -329,7 +343,7 @@ Une fois le logiciel installé, il faut le configurer pour utiliser un annuaire 
 \end{center}
 \end{figure}
 
-Après avoir rentré l'ensemble des informations, chaque utilisateur comportant l'attribut \texttt{mail} dans notre annuaire sera complété automatiquement dans le champ destinataire. Comme les attributs n'étaient pas renseignés, on les ajoute.\\
+Après avoir rentré l'ensemble des informations, chaque utilisateur comportant l'attribut \texttt{mail} dans notre annuaire sera complété automatiquement dans le champ destinataire. Comme les attributs n'étaient pas renseignés, on les ajoute :\\
 
 \begin{lstlisting}[title=ajout-mail.ldif]
 dn: sn=Doussot,ou=people,dc=musicschool,dc=fr
