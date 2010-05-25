@@ -94,25 +94,54 @@
 \section{Connexion à un annuaire existant}
 
 \subsection{Installation du client LDAP admin tool}
-Pour utiliser le serveur DNS de l'UTT (\texttt{193.50.230.240}) depuis le réseau de l'UTT, il faut écrire dans le fichier \texttt{/etc/resolv.conf} : \\
+Pour installer le logiciel, on récupère l'archive, et on la décompresse. Ensuite : \\
 
-\begin{lstlisting}[title=Contenu du fichier resolv.conf]
-nameserver 193.50.230.240
-search utt.fr
-\end{lstlisting}
-
+\noindent \texttt{user@machine  chmod +x LdapAdminTool-4.6.1.x-Linux-x86-Install.bin \\
+user@machine  ./LdapAdminTool-4.6.1.x-Linux-x86-Install.bin}
 \bigskip
-On peut renseigner plusieurs paramètres dans ce fichier, en voici trois exemples :
-\begin{itemize}
-\item nameserver : l'adresse du DNS à utiliser pars la machine,
-\item search : ajoute automatiquement ce suffixe lors des résolutions,
-\item domain : définit le domaine auquel appartient la machine.
-\end{itemize}
 
 
 \subsection{Connexion anonyme à un annuaire}
-Blablala
+Pour se connecter de manière anonyme à un annuair LDAP, on renseigne les champs :
 
+\begin{itemize}
+\item hôte : \textbf{ldap.baylor.edu}
+\item DN: \textbf{o=Baylor University, c=US}
+\end{itemize}
+
+\bigskip
+
+L'annuaire est organisé selon le modèle pays / organisation. \\
+
+L'objet racine contient :
+\begin{itemize}
+\item o : pour Organisation, précise le nom de l'organisation : ici Baylor University
+\item aci : pour Access Control Item, qui définit le contrôle aux accès pour chaque objet
+\item objectclass organization
+\item objectclass top
+\end{itemize}
+\bigskip
+Pour un élève on retrouve les informations suivantes :
+
+\begin{itemize}
+\item objectclass : baylorperson
+\item objectclass : inetorgperson
+\item objectclass : organizationalperson
+\item objectclass : person
+\item objectclass : top
+\item cn : Teresa Bennett
+\item cn : Teresa Gail Cowan
+\item sn : Cowan
+\item givenname : Teresa Gail
+\item krbname : Teresa-Bennett
+\item mail : Theresa-Bennett AT baylor.edu
+\item ou : Other
+\item ou : People
+\item pid : 100004149
+\item uid : Theresa-Bennett
+\end{itemize}
+
+  
 \subsection{Recherche dans un annuaire}
 Blablala
 
@@ -206,6 +235,14 @@ cn: violon
 uniqueMember: sn=Ploix,ou=people,dc=musicshool,dc=fr
 uniqueMember: sn=Doyen,ou=people,dc=musicshool,dc=fr
 \end{lstlisting}
+
+\subsubsection{Suppression de l'OU classe}
+
+\begin{lstlisting}[title=delete-classe.ldif]
+dn: ou=classe,dc=musicschool,dc=fr
+changetype: delete
+\end{lstlisting}
+
 
 \clearpage
 \section{Intégration avec client de messagerie}
