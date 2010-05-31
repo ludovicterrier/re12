@@ -226,12 +226,12 @@ Une fois le fichier LDIF créé, on l'ajoute à l'annuaire avec la commande :
 
 \noindent \texttt{ldapadd -x -D "cn=admin,dc=musicschool,dc=fr" -W -f racine.ldif}\\
 
-Explications de la commande :
+\noindent Explications de la commande :
 \begin{itemize}
-\item -x : utilisation de l'authentification simple,
-\item -D : permet de préciser l'utilisateur effectuant l'opération,
-\item -W : évite de donner le mot de passe dans la commande,
-\item -f précise le fichier LDIF utilisé. 
+\item \texttt{-x} : utilisation de l'authentification simple,
+\item \texttt{-D} : permet de préciser l'utilisateur effectuant l'opération,
+\item \texttt{-W} : évite de donner le mot de passe dans la commande,
+\item \texttt{-f} précise le fichier LDIF utilisé. 
 \end{itemize}
 
 
@@ -318,6 +318,55 @@ Ci-dessous se trouve la ligne à indiquer dans un fichier LDIF pour supprimer l'
 dn: ou=classe,dc=musicschool,dc=fr
 changetype: delete
 \end{lstlisting}
+
+\newpage
+\subsection{Gestion du contrôle d'accès}
+
+Le contrôle d'accès permet de gérer pour chaque utilisateur, les données qui lui seront visibles/modifiables. Tout comme la configuration générale du serveur, les ACLs se trouvent dans le fichier : \texttt{/etc/openldap/slapd.conf} :\\
+
+\begin{lstlisting}[title=ACLs]
+access to attrs=userPassword
+		by self write
+		by anonymous auth
+		by * none
+
+access to dn.subtree="ou=people,dc=musicschool,dc=fr"
+		by self write
+		by users read
+				
+access to *
+	by self write
+	by users read
+	by anonymous auth
+	by * none
+\end{lstlisting}\bigskip
+
+%by group.exact="cn=profs,ou=roles,dc=musicschool,dc=fr" write
+
+\noindent Dans la configuration ci-dessus, trois règles d'accès sont utilisées :
+\begin{itemize}
+\item une pour l'attribut userPassword,
+\item une pour l'OU people,
+\item et la dernière pour le reste de l'annuaire.
+\end{itemize}
+\bigskip
+Les personnes pouvant se connecter à l'annuaire sont représentées sous quatres types : 
+\begin{description}
+\item[self] qui correspond à un utilisateur loggué,
+\item[anonymous] qui correspond à une personne non connectée à l'annuaire,
+\item[users] qui correpond à un utilisateur authentifié,
+\item[*] qui correspond à un complément.
+\end{description}
+
+\bigskip
+
+Ainsi, l'attribut userPassword est modifiable uniquement par la personne concernée. Les informations de l'OU people sont lisibles par toute personne connectée à l'annuaire, et chaque personne présente dans l'OU people peut modifier ses informations. Une personne non connectée ne pourra elle rien voir des informations concernant les utilisateurs de notre base et ceci pour des raisons de confidentialité (numéro de téléphone, adresses\dots).\\
+
+Enfin la dernière partie (access to *) concerne toutes les autres informations de l'annuaire qui ne correspondent pas aux cas particuliers définis dans les deux règles précédentes. On autorise toujours les personnes a modifier leur données, les utilisateurs loggués à lire le contenu de l'annuaire tout comme une personne anonyme puisque les informations qui concernent les rôles et les classes ne présentent aucun soucis de confidentialité.
+
+
+%Ainsi, en fonction de chaque type d'utilisateur, on va appliquer plus ou moins de droits pour garantir un niveau de sécurité suffisant dans notre annuaire. C'est pourquoi dans la configuration ci-dessus, un utilisateur loggué (\texttt{self}) pourra changer son mot de passe (\texttt{write}), un anonyme (\texttt{anonymous}) sera soumis à l'authentification (\texttt{auth}), et enfin on n'autorise pas l'accès au reste (\texttt{*}) avec le mot-clé (\texttt{none}).\\
+
 
 
 \clearpage
