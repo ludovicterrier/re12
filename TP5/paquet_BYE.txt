@@ -1,0 +1,19 @@
+No.     Time        Source                Destination           Protocol Info
+     46 17.691735   192.168.3.129         192.168.3.1           SIP      Request: BYE sip:102@192.168.3.1
+
+Frame 46 (451 bytes on wire, 451 bytes captured)
+Ethernet II, Src: Cisco_26:5e:20 (00:17:59:26:5e:20), Dst: Dell_6a:f6:f1 (00:1a:a0:6a:f6:f1)
+Internet Protocol, Src: 192.168.3.129 (192.168.3.129), Dst: 192.168.3.1 (192.168.3.1)
+User Datagram Protocol, Src Port: sip (5060), Dst Port: sip (5060)
+Session Initiation Protocol
+    Request-Line: BYE sip:102@192.168.3.1 SIP/2.0
+    Message Header
+        Via: SIP/2.0/UDP 192.168.3.129:5060;rport;branch=z9hG4bK345EE39524AA335D955FEC4B5AC9A503
+        From: user1 <sip:user1@192.168.3.1>;tag=1600664632
+        To: <sip:102@192.168.3.1>;tag=as16bb0d2a
+        Contact: <sip:user1@192.168.3.129:5060>
+        Call-ID: 706088E9-6905-7FA9-B9A8-F002AC583FF6@192.168.3.129
+        CSeq: 43046 BYE
+        Max-Forwards: 70
+        User-Agent: X-Lite release 1105d
+        Content-Length: 0

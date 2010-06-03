@@ -1,0 +1,36 @@
+No.     Time        Source                Destination           Protocol Info
+      9 7.053510    192.168.3.129         192.168.3.1           SIP/SDP  Request: INVITE sip:102@192.168.3.1, with session description
+
+Frame 9 (787 bytes on wire, 787 bytes captured)
+Ethernet II, Src: Cisco_26:5e:20 (00:17:59:26:5e:20), Dst: Dell_6a:f6:f1 (00:1a:a0:6a:f6:f1)
+Internet Protocol, Src: 192.168.3.129 (192.168.3.129), Dst: 192.168.3.1 (192.168.3.1)
+User Datagram Protocol, Src Port: sip (5060), Dst Port: sip (5060)
+Session Initiation Protocol
+    Request-Line: INVITE sip:102@192.168.3.1 SIP/2.0
+    Message Header
+        Via: SIP/2.0/UDP 192.168.3.129:5060;rport;branch=z9hG4bK31769CB150326F07D6EF3F1EE6061B5B
+        From: user1 <sip:user1@192.168.3.1>;tag=1600664632
+        To: <sip:102@192.168.3.1>
+        Contact: <sip:user1@192.168.3.129:5060>
+        Call-ID: 706088E9-6905-7FA9-B9A8-F002AC583FF6@192.168.3.129
+        CSeq: 43045 INVITE
+        Max-Forwards: 70
+        Content-Type: application/sdp
+        User-Agent: X-Lite release 1105d
+        Content-Length: 312
+    Message Body
+        Session Description Protocol
+            Session Description Protocol Version (v): 0
+            Owner/Creator, Session Id (o): user1 4092070068 4092070070 IN IP4 192.168.3.129
+            Session Name (s): X-Lite
+            Connection Information (c): IN IP4 192.168.3.129
+            Time Description, active time (t): 0 0
+            Media Description, name and address (m): audio 8000 RTP/AVP 0 8 3 98 97 101
+            Media Attribute (a): rtpmap:0 pcmu/8000
+            Media Attribute (a): rtpmap:8 pcma/8000
+            Media Attribute (a): rtpmap:3 gsm/8000
+            Media Attribute (a): rtpmap:98 iLBC/8000
+            Media Attribute (a): rtpmap:97 speex/8000
+            Media Attribute (a): rtpmap:101 telephone-event/8000
+            Media Attribute (a): fmtp:101 0-15
+            Media Attribute (a): sendrecv
