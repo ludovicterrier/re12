@@ -101,6 +101,14 @@
 
 \section{Architecture utilisée}
 \subsection{configuration réseau}
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=4cm]{structure_reseau}
+\caption{Structure du réseau}
+\label{fig:da}
+\end{center}
+\end{figure}
+
 \subsection{configuration téléphone}
 
 \section{Fichiers de configuration SIP}
@@ -110,6 +118,15 @@
 \section{IAX} 
 \subsection{pourquoi?}
 A ce stade nous sommes en mesure de passer des appels entre divers téléphones situés sur le même réseau via le même serveur Asterisk. Or, parfois en entreprise, dans le cas de postes géographiquement séparés il peut être intéressant de pouvoir appeler des téléphones sur d'autres réseaux et utilisant un autre serveur de ToIP. Ceci est permit par le protocole IAX\footnote{Inter-Asterisk eXchange}. Pour les besoins du TP nous l'avons implémenté afin de pouvoir échanger des appels téléphoniques entre tous les groupes.
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=5cm]{structure_reseau_IAX}
+\caption{Structure du réseau}
+\label{fig:da}
+\end{center}
+\end{figure}
+
 \subsection{fichier IAX.conf}
 
 \section{Fichiers de traces}
@@ -173,13 +190,7 @@ Session Initiation Protocol
 user@machine  ./LdapAdminTool-4.6.1.x-Linux-x86-Install.bin}
 \bigskip
 
-\begin{figure}[!h]
-\begin{center}
-%\includegraphics[scale=0.61]{recherche}
-\caption{Résultat d'une recherche dans LDAP Admin Tools.}
-\label{fig:da}
-\end{center}
-\end{figure}
+
 
 
 
