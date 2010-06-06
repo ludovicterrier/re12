@@ -110,10 +110,47 @@
 \end{figure}
 
 \subsection{configuration téléphone}
-
+\clearpage
 \section{Fichiers de configuration SIP}
 \subsection{sip.conf}
+
+\begin{lstlisting}[title=sip.conf v1]
+[user1]
+username=user1
+type=friend
+context=locale ;outgoing
+port=5060
+quality=200
+;secret=blah
+nat=no
+host=dynamic
+canreinvite=yes
+
+[user2]
+username=user2
+type=friend
+context=locale ;outgoing
+port=5060
+quality=200
+;secret=blah
+nat=no
+host=dynamic
+canreinvite=yes
+\end{lstlisting}
+
 \subsection{extensions.conf}
+
+\begin{lstlisting}[title=Extensions.conf v1]
+[locale]
+exten => 101,1,Wait(1)
+exten => 101,2,Dial(SIP/user1)
+exten => 101,3,Hangup
+
+exten => 102,1,Wait(1)
+exten => 102,2,Dial(SIP/user2)
+exten => 102,3,Hangup
+\end{lstlisting}
+
 
 \section{IAX} 
 \subsection{pourquoi?}
@@ -128,6 +165,42 @@ A ce stade nous sommes en mesure de passer des appels entre divers téléphones 
 \end{figure}
 
 \subsection{fichier IAX.conf}
+
+\begin{lstlisting}[title=Fichier IAX.conf]
+[serveur4]
+type=friend
+username=serveur4
+host=192.168.4.129
+mask=255.255.255.128
+secret=123456
+port=4569
+context=locale
+auth=md5
+trunk=yes
+
+[serveur5]
+type=friend
+username=serveur3
+host=192.168.5.1
+mask=255.255.255.128
+secret=123456
+port=4569
+context=locale
+auth=md5
+trunk=yes
+
+[serveur2]
+type=friend
+username=serveur2
+host=192.168.2.1
+mask=255.255.255.128
+secret=123456
+port=4569
+context=locale
+auth=md5
+trunk=yes
+\end{lstlisting}
+
 
 \section{Fichiers de traces}
 \subsection{message INVITE (en détail)}
