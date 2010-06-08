@@ -100,16 +100,16 @@
 \subsection{messages}
 
 \section{Architecture utilisée}
-\subsection{configuration réseau}
+\subsection{Configuration réseau}
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[height=4cm]{structure_reseau}
+\includegraphics[height=5cm]{structure_reseau}
 \caption{Structure du réseau}
 \label{fig:da}
 \end{center}
 \end{figure}
 
-\subsection{configuration téléphone}
+\subsection{Configuration téléphone}
 \clearpage
 \section{Fichiers de configuration SIP}
 \subsection{sip.conf}
@@ -151,20 +151,20 @@ exten => 102,2,Dial(SIP/user2)
 exten => 102,3,Hangup
 \end{lstlisting}
 
-
+\clearpage
 \section{IAX} 
-\subsection{pourquoi?}
+\subsection{Pourquoi?}
 A ce stade nous sommes en mesure de passer des appels entre divers téléphones situés sur le même réseau via le même serveur Asterisk. Or, parfois en entreprise, dans le cas de postes géographiquement séparés il peut être intéressant de pouvoir appeler des téléphones sur d'autres réseaux et utilisant un autre serveur de ToIP. Ceci est permit par le protocole IAX\footnote{Inter-Asterisk eXchange}. Pour les besoins du TP nous l'avons implémenté afin de pouvoir échanger des appels téléphoniques entre tous les groupes.
 
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[height=5cm]{structure_reseau_IAX}
+\includegraphics[height=6cm]{structure_reseau_IAX}
 \caption{Structure du réseau}
 \label{fig:da}
 \end{center}
 \end{figure}
 
-\subsection{fichier IAX.conf}
+\subsection{Fichier IAX.conf}
 
 \begin{lstlisting}[title=Fichier IAX.conf]
 [serveur4]
@@ -203,7 +203,7 @@ trunk=yes
 
 
 \section{Fichiers de traces}
-\subsection{message INVITE (en détail)}
+\subsection{Message INVITE (en détail)}
 Un paquet d'INVITE SIP est composé de deux parties, un \textit{HEADER} et un  \textit{BODY}. C'est le détail de ces deux éléments que nous allons voir ici. 
 
 \paragraph{}Pour ce faire nous avons émit un appel entre un hardphone (IP 192.168.3.129) vers un softphone X-lite (IP 192.168.3.3). Nous avons capturé à l'aide Wireshark l'ensemble des échanges depuis le serveur. Ainsi nous pouvons vous proposer ici le contenu du paquet INVITE capturé entre l'émetteur et le serveur Asterisk :
@@ -241,7 +241,7 @@ Session Description Protocol
             Media Attribute (a): sendrecv
 \end{lstlisting}
 
-\subsection{message BYE} 
+\subsection{Message BYE} 
 Voyons ici le contenu d'un paquet BYE émis par l'UA\footnote{User Agent} qui était à l'initiative de l'appel.
 
 \begin{lstlisting}[title=Contenu d'un paquet BYE]
