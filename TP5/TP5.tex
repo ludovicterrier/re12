@@ -284,14 +284,14 @@ exten => 102,2,Dial(SIP/user2)
 exten => 102,3,Hangup
 \end{lstlisting}
 
-On ajout donc les numéros tels que définis dans la partie précédente dans le plan de numérotation outgoing. Puis on précise les préfixes des serveurs que l'on veut pouvoir contacter. Ainsi pour le préfixe 95 on précise l'ensemble des étapes que le serveur devra suivre :
+On ajoute donc les numéros tels que définis dans la partie précédente dans le plan de numérotation outgoing. Puis on précise les préfixes des serveurs que l'on veut pouvoir contacter. Ainsi pour le préfixe 95 on précise l'ensemble des étapes que le serveur devra suivre :
 \begin{itemize}
 \item Wait(1) : on attend une seconde,
-\item Dial(IAX2/serveur5:123456@192.168.5.1/\${EXTEN:2},30,r) : définit le serveur auquel on devra faire transiter l'appel.
-\end{itemize}
+\item Dial(IAX2/serveur5:123456@192.168.5.1/\${EXTEN:2},30,r) : définit le serveur auquel on devra faire transiter l'appel, le mot de passe qui devra être fourni\ldots
+\end{itemize}\bigskip
 
 
-Tout d’abord, nous ajoutons les autres serveurs Asterisk dans le fichier \\
+Ajoutons d'abord les autres serveurs Asterisk dans le fichier
 \texttt{/etc/asterisk/iax.conf} :
 
 \begin{lstlisting}[title=Fichier IAX.conf]
