@@ -120,7 +120,7 @@ SIP est un protocole de ToIP librement utilisable via la plate-forme \textit{Ast
 \end{itemize} 
 
 \subsubsection{Les élèments qui composent un réseau SIP}
-De tels réseaux sont composés d'UA\footnote{User Agent} Serveur (qui réceptionnent les sessions), et Client (qui initialisent les sessions).
+De tels réseaux sont composés d'UA\footnote{User Agent} Server (qui réceptionnent les sessions), et Client (qui initialisent les sessions).
 \paragraph{}Mais aussi différents types de serveurs :
 \begin{itemize}
 \item  Serveur d'Enregistrement (Registrar Server) : qui reçoit les inscriptions des UAs,
@@ -176,12 +176,12 @@ Pour les besoins du TP nous avons configuré un réseau composé de deux station
 \label{fig:da}
 \end{center}
 \end{figure}
-%\vspace{3cm}
-Les éléments du réseau sont connectés entre eux via des switchs.
+\vspace{4cm}
 
+Les éléments du réseau sont connectés entre eux via des switchs.
 \subsection{Configuration téléphone}
-Pour le hardphone, on utilise son menu de configuration pour lui préciser son IP, l'IP du serveur Asterisk, l'utilisateur correspondant à ce poste (pour se logguer). Pour le softphone, on utilise les mêmes informations.
-\clearpage
+Pour le hardphone, on utilise son menu de configuration pour lui préciser son IP, l'IP du serveur \textit{Asterisk}, l'utilisateur correspondant à ce poste (pour se logguer). Pour le softphone, on utilise les mêmes informations.
+
 \section{Fichiers de configuration SIP}
 \subsection{sip.conf}
 Ce fichier définit l'ensemble des options du protocole SIP qui seront utilisées lorsque notre serveur de téléphonie sera en fonctionnement. \\
@@ -214,7 +214,7 @@ L'extrait ci-dessus montre comment définir les utilisateurs qui pourront télé
 
 \subsection{extensions.conf}
 
-Dans Asterisk, les extensions définissent une série d'étapes uniques qui vont être déroulées au cours d'un appel. Pour définir une extension, on utilise la forme : \\
+Dans \textit{Asterisk}, les extensions définissent une série d'étapes uniques qui vont être déroulées au cours d'un appel. Pour définir une extension, on utilise la forme : \\
 
 \noindent \texttt{exten => nom,priorité,application()}\\
 
@@ -229,7 +229,6 @@ exten => 102,2,Dial(SIP/user2)
 exten => 102,3,Hangup
 \end{lstlisting}
 
-\clearpage
 Pour cette configuration, on voit que pour les deux numéros correspondant à nos deux utilisateurs (101 et 102), on définit une suite d'actions. Exemple pour le numéro 101 :\bigskip
 
 \begin{itemize}
@@ -240,10 +239,10 @@ Pour cette configuration, on voit que pour les deux numéros correspondant à no
 
 \section{IAX} 
 \subsection{Pourquoi?}
-A ce stade nous sommes en mesure de passer des appels entre divers téléphones situés sur le même réseau via le même serveur Asterisk. Or, parfois en entreprise, dans le cas de postes géographiquement séparés il peut être intéressant de pouvoir appeler des téléphones sur d'autres réseaux et utilisant un autre serveur de ToIP. Ceci est permit par le protocole IAX\footnote{Inter-Asterisk eXchange}. Pour les besoins du TP nous l'avons implémenté afin de pouvoir échanger des appels téléphoniques entre tous les groupes.
+A ce stade nous sommes en mesure de passer des appels entre divers téléphones situés sur le même réseau via le même serveur \textit{Asterisk}. Or, parfois en entreprise, dans le cas de postes géographiquement séparés il peut être intéressant de pouvoir appeler des téléphones sur d'autres réseaux et utilisant un autre serveur de ToIP. Ceci est permit par le protocole IAX\footnote{Inter-Asterisk eXchange}. Pour les besoins du TP nous l'avons implémenté afin de pouvoir échanger des appels téléphoniques entre tous les groupes.
 
 \paragraph{}Voici le schéma décrivant l'infrastructure du réseau que nous désirons obtenir :
-
+\clearpage
 \begin{figure}[!h]
 \begin{center}
 \includegraphics[height=5cm]{structure_reseau_IAX}
@@ -256,13 +255,12 @@ A ce stade nous sommes en mesure de passer des appels entre divers téléphones 
 \subsection{Fichier IAX.conf}
 Pour faire fonctionner IAX, on va dans un premier temps modifier les fichiers \texttt{extension.conf} et \texttt{sip.conf} pour s'adapter à ce changement d'architecture.\\
 
-Ainsi, on change dans le fichier sip.conf le contexte : 
+Ainsi, on change dans le fichier \texttt{sip.conf} le contexte : 
 
 \begin{lstlisting}[title=Ajout au fichier sip.conf pour IAX]
 context=outgoing
 \end{lstlisting}
 
-\clearpage
 
 \begin{lstlisting}[title=Ajout au fichier extension.conf pour IAX]
 [outgoing]
@@ -287,14 +285,14 @@ exten => 102,2,Dial(SIP/user2)
 exten => 102,3,Hangup
 \end{lstlisting}
 
-On ajoute donc les numéros tels que définis dans la partie précédente dans le plan de numérotation outgoing. Puis on précise les préfixes des serveurs que l'on veut pouvoir contacter. Ainsi pour le préfixe 95 on précise l'ensemble des étapes que le serveur devra suivre :
+On ajoute donc les numéros tels que définis dans la partie précédente dans le plan de numérotation \texttt{outgoing}. Puis on précise les préfixes des serveurs que l'on veut pouvoir contacter. Ainsi pour le préfixe 95 on précise l'ensemble des étapes que le serveur devra suivre :
 \begin{itemize}
 \item Wait(1) : on attend une seconde,
-\item Dial(IAX2/serveur5:123456@192.168.5.1/\${EXTEN:2},30,r) : définit le serveur auquel on devra faire transiter l'appel, le mot de passe qui devra être fourni\ldots
+\item Dial(IAX2/serveur5:123456@192.168.5.1/\${EXTEN:2},30,r) : définit le serveur auquel on devra faire transiter l'appel, le mot de passe qui devra être fourni, etc.
 \end{itemize}\bigskip
 
 
-\noindent Ajoutons d'abord les autres serveurs Asterisk dans le fichier
+\noindent Ajoutons d'abord les autres serveurs \textit{Asterisk} dans le fichier
 \texttt{/etc/asterisk/iax.conf} :
 
 \begin{lstlisting}[title=Fichier IAX.conf]
@@ -331,7 +329,7 @@ context=locale
 auth=md5
 trunk=yes
 \end{lstlisting}
-Nous avons ajouté ici, les serveurs \textit{4}, \textit{5} et \textit{2}. Nous avons définit le \textbf{type friend}, en effet dans ce cas les utilisateurs de notre réseau peuvent \textit{appeler} et être \textit{appelés}. Nous indiquons ensuite le nom du serveur via la commande \textbf{username} ainsi que son adresse IP avec le masque de sous réseau ainsi que le port. Vient ensuite le mot de passe utilisé pour s'authentifier sur le serveur distant via md5 (le champ \textbf{auth}). Enfin, \textbf{trunk=yes} permet de signifier au serveur qu'il peut utiliser les timeslots qui lui sont attribués pour plusieurs appels.
+Nous avons ajouté ici, les serveurs \textit{4}, \textit{5} et \textit{2}. Nous avons définit le \textbf{type friend}, en effet dans ce cas les utilisateurs de notre réseau peuvent \textit{appeler} et être \textit{appelés}. Nous indiquons ensuite le nom du serveur via la commande \textbf{username}, son adresse IP avec le masque de sous réseau ainsi que le port. Vient ensuite le mot de passe utilisé pour s'authentifier sur le serveur distant via md5 (le champ \textbf{auth}). Enfin, \textbf{trunk=yes} permet de signifier au serveur qu'il peut utiliser les timeslots qui lui sont attribués pour plusieurs appels.
 
 \section{Fichiers de traces}
 \subsection{Message INVITE (en détail)}
@@ -372,6 +370,7 @@ Session Description Protocol
 \end{lstlisting}
 \paragraph{}Le BODY, quant-à lui contient les informations SDP, il propose ici les codecs disponibles. 
 
+\clearpage
 \subsection{Message BYE} 
 Voyons ici le contenu d'un paquet BYE émis par l'UA\footnote{User Agent} qui était à l'initiative de l'appel.
 
