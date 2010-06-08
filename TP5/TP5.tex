@@ -176,10 +176,9 @@ Pour les besoins du TP nous avons configuré un réseau composé de deux station
 \label{fig:da}
 \end{center}
 \end{figure}
-
 %\vspace{3cm}
-
 Les éléments du réseau sont connectés entre eux via des switchs.
+
 \subsection{Configuration téléphone}
 Pour le hardphone, on utilise son menu de configuration pour lui préciser son IP, l'IP du serveur Asterisk, l'utilisateur correspondant à ce poste (pour se logguer). Pour le softphone, on utilise les mêmes informations.
 \clearpage
@@ -352,7 +351,7 @@ Un paquet d'INVITE SIP est composé de deux parties, un \textit{HEADER} et un  \
         User-Agent: X-Lite release 1105d
         Content-Length: 312
 \end{lstlisting}
-
+\paragraph{}Le HEADER contient des information relatives aux UAs, à la séquence et à l'appel.
 \subsubsection{BODY}
 \begin{lstlisting}[title=Contenu du BODY d'un paquet INVITE de SIP]
 Session Description Protocol
@@ -371,6 +370,7 @@ Session Description Protocol
             Media Attribute (a): fmtp:101 0-15
             Media Attribute (a): sendrecv
 \end{lstlisting}
+\paragraph{}Le BODY, quant-à lui contient les informations SDP, il propose ici les codecs disponibles. 
 
 \subsection{Message BYE} 
 Voyons ici le contenu d'un paquet BYE émis par l'UA\footnote{User Agent} qui était à l'initiative de l'appel.
@@ -389,14 +389,5 @@ Session Initiation Protocol
         User-Agent: X-Lite release 1105d
         Content-Length: 0
 \end{lstlisting}
-
-<<<<<<< HEAD
-
-
-
-
-
-
-=======
->>>>>>> 9b4331497a2c312d333f276aab9ecb91bd3c249d
+\paragraph{}Nous voyons ici que la fermeture de session est à l'initiative de user1, 192.168.3.1.
 \end{document}
