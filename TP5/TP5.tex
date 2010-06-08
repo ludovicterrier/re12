@@ -181,6 +181,7 @@ Pour les besoins du TP nous avons configuré un réseau composé de deux station
 
 Les éléments du réseau sont connectés entre eux via des switchs.
 \subsection{Configuration téléphone}
+Pour le hardphone, on utilise son menu de configuration pour lui préciser son IP, l'IP du serveur Asterisk, l'utilisateur correspondant à ce poste (pour se logguer). Pour le softphone, on utilise les mêmes informations.
 \clearpage
 \section{Fichiers de configuration SIP}
 \subsection{sip.conf}
@@ -294,7 +295,7 @@ On ajoute donc les numéros tels que définis dans la partie précédente dans l
 \end{itemize}\bigskip
 
 
-Ajoutons d'abord les autres serveurs Asterisk dans le fichier
+\noindent Ajoutons d'abord les autres serveurs Asterisk dans le fichier
 \texttt{/etc/asterisk/iax.conf} :
 
 \begin{lstlisting}[title=Fichier IAX.conf]
