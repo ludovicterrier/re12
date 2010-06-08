@@ -11,6 +11,7 @@
 \usepackage{fancybox}
 \usepackage{listings}
 \usepackage{multicol}
+\usepackage[table]{xcolor}
 
 \usepackage[T1]{fontenc}
 \usepackage[scaled]{helvet}
@@ -55,7 +56,7 @@
 \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
 
 \definecolor{gris}{gray}{0.75}
-%\definecolor{bleup}{HTML}{258EE9}
+\definecolor{bleup}{HTML}{258EE9}
 
 
 %\renewcommand*\familydefault{\ttdefault} %% Only if the base font of the document is to be typewriter style
@@ -97,7 +98,72 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 1ère partie
 \section{Etude théorique}
 \subsection{SIP}
+SIP est un protocole de ToIP librement utilisable via la plate-forme \textit{Asterisk}. L'intérêt d'un tel protocole en entreprise réside dans le fait que le réseau téléphonique peut être supprimé car les appels utilisent le réseau informatique.  
+
+\paragraph{}C'est un protocole de signalisation permettant de gérer des sessions multimédia. Cette gestion passe par l'ouverture, la modification et la libération de sessions. SIP permet d'accepter un appel, indiquer une occupation ou encore identifier le mode de compression, etc. 
+
+
+\paragraph{}Il permet de gérer :
+\begin{enumerate}
+\item la localisation des usagers,
+\item la disponibilité des usagers,
+\item la capacité des usagers,
+\item l'établissement d'une session,
+\item les sessions.
+\end{enumerate}
+
+\paragraph{}Il est normalisé par l'IETF via les RFC : 2543, 3262, 3265, etc. et est basé sur 
+\begin{itemize}
+\item \textit{SDP}, Session Description Portocol
+\item \textit{RTSP}, Real Time Streaming Protocol 
+\item \textit{RTP} (sessions de flux réel) / \textit{RTCP} (envoie régulier de paquets de contrôle par les participants à une session RTP)
+\end{itemize} 
+
+\subsubsection{Les élèments qui composent un réseau SIP}
+De tels réseaux sont composés d'UA\footnote{User Agent} Serveur (qui réceptionnent les sessions), et Client (qui initialisent les sessions).
+\paragraph{}Mais aussi différents types de serveurs :
+\begin{itemize}
+\item  Serveur d'Enregistrement (Registrar Server) : qui reçoit les inscriptions des UAs,
+\item Serveur Proxy : relais mandataire utilisé entre UAs qui ne connaissent par leurs localisations respectives,
+\item Serveur de localisation : contient la base de donnée des UAs.
+\item Serveur de redirection : donne la localisation possible des UAs.
+\end{itemize}
+
 \subsection{messages}
+SIP peut envoyer deux types de messages (textuels basés sur HTTP 1.0) :
+\begin{itemize}
+\item des requêtes (UAC  $\Rightarrow$ UAS)
+\item des réponses
+\end{itemize}
+
+\begin{figure}[h!]
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+  		 \hline
+  			  \rowcolor{gris} En-tête MAC & En-tête IP & En-tête TCP ou UDP & Message SIP\\
+   		 \hline
+  		 \end{tabular}
+		 \caption{Paquet SIP avec ses en-têtes.}
+ 	\end{center}
+ \end{figure}
+ Passons maintenant au détail d'un paquet SIP :
+\begin{figure}[h!]
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+  		 \hline
+  			  \rowcolor{bleup} Type & En-tête & Corps\\
+   		 \hline
+		 	INVITE & VIA   &    \\
+			REGISTER & FROM & Description de  \\
+			ACK &  TO &  la session par \\
+			BYE &   CALL-ID  &   le protocole SDP   \\
+			CANCEL &   CSEQ &  \\
+		 \hline
+  		 \end{tabular} 
+		 \caption{Détail d'un paquet SIP.}
+ 	\end{center}
+ \end{figure}
+\paragraph{} Revenons sur le paramètre \textit{Cseq} contenu dans l'en-tête, celui-ci est un indentifiant d'échanges liant les requêtes aux réponses. Il est incrémenté à chaque nouvelle requête.
 
 \section{Architecture utilisée}
 \subsection{Configuration réseau}
@@ -156,15 +222,20 @@ exten => 102,3,Hangup
 \subsection{Pourquoi?}
 A ce stade nous sommes en mesure de passer des appels entre divers téléphones situés sur le même réseau via le même serveur Asterisk. Or, parfois en entreprise, dans le cas de postes géographiquement séparés il peut être intéressant de pouvoir appeler des téléphones sur d'autres réseaux et utilisant un autre serveur de ToIP. Ceci est permit par le protocole IAX\footnote{Inter-Asterisk eXchange}. Pour les besoins du TP nous l'avons implémenté afin de pouvoir échanger des appels téléphoniques entre tous les groupes.
 
+\paragraph{}Voici le schéma décrivant l'infrastructure du réseau que nous désirons obtenir :
+
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[height=6cm]{structure_reseau_IAX}
+\includegraphics[height=5cm]{structure_reseau_IAX}
 \caption{Structure du réseau}
 \label{fig:da}
 \end{center}
 \end{figure}
 
 \subsection{Fichier IAX.conf}
+
+Tout d’abord, nous ajoutons les autres serveurs Asterisk dans le fichier \\
+\texttt{/etc/asterisk/iax.conf} :
 
 \begin{lstlisting}[title=Fichier IAX.conf]
 [serveur4]
@@ -200,7 +271,7 @@ context=locale
 auth=md5
 trunk=yes
 \end{lstlisting}
-
+Nous avons ajouté ici, les serveurs \textit{4}, \textit{5} et \textit{2}. Nous avons définit le \textbf{type friend}, en effet dans ce cas les utilisateurs de notre réseau peuvent \textit{appeler} et être \textit{appelés}. Nous indiquons ensuite le nom du serveur via la commande \textbf{username} ainsi que son adresse IP avec le masque de sous réseau ainsi que le port. Vient ensuite le mot de passe utilisé pour s'authentifier sur le serveur distant via md5 (le champ \textbf{auth}). Enfin, \textbf{trunk=yes} permet de signifier au serveur qu'il peut utiliser les timeslots qui lui sont attribués pour plusieurs appels.
 
 \section{Fichiers de traces}
 \subsection{Message INVITE (en détail)}
@@ -259,9 +330,6 @@ Session Initiation Protocol
         Content-Length: 0
 \end{lstlisting}
 
-\noindent \texttt{user@machine  chmod +x LdapAdminTool-4.6.1.x-Linux-x86-Install.bin \\
-user@machine  ./LdapAdminTool-4.6.1.x-Linux-x86-Install.bin}
-\bigskip
 
 
 
