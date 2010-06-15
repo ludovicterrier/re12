@@ -1,0 +1,147 @@
+\documentclass[12pt,a4paper,notitlepage]{article}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage[francais]{babel}\usepackage[T1]{fontenc}
+\usepackage[cyr]{aeguill}
+\usepackage{lmodern}
+\usepackage{color}
+\usepackage{boites}
+\usepackage{caption}
+\usepackage{fancybox}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage[table]{xcolor}
+
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault}
+
+%\lstset{language=bash, basicstyle=\footnotesize, frame=shadowbox, rulesepcolor=\color{gris}, captionpos=b}
+
+  \lstset{
+         basicstyle=\footnotesize\ttfamily, % Standardschrift
+         %numbers=left,               % Ort der Zeilennummern
+         numberstyle=\tiny,          % Stil der Zeilennummern
+         %stepnumber=2,               % Abstand zwischen den Zeilennummern
+         numbersep=5pt,              % Abstand der Nummern zum Text
+         tabsize=2,                  % Groesse von Tabs
+         extendedchars=true,         %
+         breaklines=true,            % Zeilen werden Umgebrochen
+         keywordstyle=\color{red},
+                frame=b,         
+         keywordstyle=[1]{\itshape}{//},    % Stil der Keywords
+         stringstyle=\color{white}\ttfamily, % Farbe der String
+         showspaces=false,           % Leerzeichen anzeigen ?
+         showtabs=false,             % Tabs anzeigen ?
+         xleftmargin=5pt,
+         framexleftmargin=1pt,
+         framexrightmargin=5pt,
+         %numbers=left,
+         frame=toplines,
+         framextopmargin=3pt,
+       %  framexleftmargin=8pt,
+         numberblanklines=false,
+         %morecomment=[s][marron]{/*}{*/},
+         %moredelim=*[s][\color{blue}]{/*}{*/}
+         %morecomment=[s][marron]{/*-}{*/}},         
+         framexbottommargin=5pt,
+         captionpos=b,
+         %backgroundcolor=\color{lightgray},
+         showstringspaces=false      % Leerzeichen in Strings anzeigen ? 
+ }
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{10pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+
+\definecolor{gris}{gray}{0.75}
+\definecolor{bleup}{HTML}{258EE9}
+
+
+%\renewcommand*\familydefault{\ttdefault} %% Only if the base font of the document is to be typewriter style
+%\renewcommand{\rmdefault}{ptm}
+
+
+\usepackage[
+   pdfauthor={Ludovic Terrier & Arnaud Goulut},
+   pdftitle={RE12 - TP6},
+   ]{hyperref}
+   
+   
+\usepackage[pdftex]{graphicx}
+
+%\usepackage{titlesec}
+%\titleformat{\section}[frame] {\normalfont} {\filright
+%\footnotesize
+%\enspace\textbf{\thesection}\enspace} {8pt} {\Large\bfseries\filcenter}
+
+%% Je contrôle la taille de ma zone imprimée...
+\usepackage{anysize}
+%% ...en définissants les marges {gauche}{droite}{haute}{basse}
+\marginsize{25mm}{15mm}{10mm}{15mm}
+
+\begin{document}
+
+\title{Gestion de réseau par SNMP}
+\author{Arnaud Goulut et Ludovic Terrier}
+\date{Juin 2010}
+\maketitle
+
+
+%\tableofcontents
+
+\thispagestyle{empty}
+
+
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 1ère partie
+\section{Configuration et prise en main de l'agent SNMP}
+\subsection{Installation d'un agent}
+SIP est un protocole de ToIP librement utilisable via la plate-forme \textit{Asterisk}. L'intérêt d'un tel protocole en entreprise réside dans le fait que le réseau téléphonique peut être supprimé car les appels utilisent le réseau informatique.  
+
+\paragraph{}C'est un protocole de signalisation permettant de gérer des sessions multimédia. Cette gestion passe par l'ouverture, la modification et la libération de sessions. SIP permet d'accepter un appel, indiquer une occupation ou encore identifier le mode de compression, etc. 
+
+\subsection{Ligne de commande}
+De tels réseaux sont composés d'UA\footnote{User Agent} Server (qui réceptionnent les sessions), et Client (qui initialisent les sessions).
+
+\subsection{MibBrowser}
+SIP peut envoyer deux types de messages (textuels basés sur HTTP 1.0) :
+
+
+Passons maintenant au détail d'un paquet SIP :
+
+\paragraph{} Revenons sur le paramètre \textit{Cseq} contenu dans l'en-tête, celui-ci est un indentifiant d'échanges liant les requêtes aux réponses. Il est incrémenté à chaque nouvelle requête.
+
+\section{Surveillance des équipements réseau et alarmes}
+\subsection{Configuration équipements}
+Pour les besoins du
+
+\subsection{Perte de connectivité}
+Pour le hardphone, on utili
+
+\subsection{Le démon snmptrapd}
+dfdfklsjfkj
+
+\section{Prise en main d'une console de supervision}
+\subsection{Installation de ZenOSS}
+Ce fichier définit l'ensemble des options du protocole SIP qui seront utilisées lorsque notre serveur de téléphonie sera en fonctionnement. \\
+\begin{lstlisting}[title=sip.conf v1]
+[user1]
+username=user1
+\end{lstlisting}
+
+\subsection{Parcours des fonctionnalités}
+
+Dans \textit{Asterisk}, les extensions définissent une série d'étapes uniques qui vont être déroulées au cours d'un appel. Pour définir une extension, on utilise la forme : \\
+
+%\paragraph{}Voici le schéma décrivant l'infrastructure du réseau que nous désirons obtenir :
+%\clearpage%
+%\begin{figure}[!h]
+%\begin{center}
+%\includegraphics[height=5cm]{structure_reseau_IAX}
+%\caption{Structure du réseau}
+%\label{fig:da}
+%\end{center}
+%\end{figure}
+\end{document}
