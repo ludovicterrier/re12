@@ -84,7 +84,7 @@
 \begin{document}
 
 \title{Gestion de réseau par SNMP}
-\author{Arnaud Goulut et Ludovic Terrier}
+\author{Ludovic Terrier et Arnaud Goulut}
 \date{Juin 2010}
 \maketitle
 
@@ -97,13 +97,41 @@
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 1ère partie
 \section{Configuration et prise en main de l'agent SNMP}
-\subsection{Installation d'un agent}
-SIP est un protocole de ToIP librement utilisable via la plate-forme \textit{Asterisk}. L'intérêt d'un tel protocole en entreprise réside dans le fait que le réseau téléphonique peut être supprimé car les appels utilisent le réseau informatique.  
+\subsection{Installation d'un agent snmp}
+L'agent \texttt{net-snmp} était déjà installé lorsque nous avons pris possession de la salle de TP, il nous a donc simplement fallut éditer le fichier de configuration \textit{snmpd.conf} pour le faire fonctionner comme nous le désirions :
+\begin{lstlisting}[title=snmpd.conf]
+rocommunity publicB3
+rwcommunity privateB3
+\end{lstlisting}
 
-\paragraph{}C'est un protocole de signalisation permettant de gérer des sessions multimédia. Cette gestion passe par l'ouverture, la modification et la libération de sessions. SIP permet d'accepter un appel, indiquer une occupation ou encore identifier le mode de compression, etc. 
+Nous avons fait au plus simple, ainsi la communauté \textbf{publicB3} est autorisée a consulter les informations contenues dans la \textit{MIB}\footnote{Management Information Base}, alors que \textbf{privateB3} peut lire, mais aussi écrire dans cette même base.
 
 \subsection{Ligne de commande}
-De tels réseaux sont composés d'UA\footnote{User Agent} Server (qui réceptionnent les sessions), et Client (qui initialisent les sessions).
+Afin de consulter la MIB disponible sur notre machine, il nous a fallut installer le programme \texttt{net-snmp-utils} via les dépôts Fedora (\texttt{yum install}). Nous avons ensuite pu tester les différentes commandes disponibles :\\
+
+\begin{itemize}
+\item \texttt{snmpget} : permet de récupérer les informations d'une instance précise.
+\item \texttt{snmpgetnext} : permet de récupérer les informations de l'instance disponible suivante.
+\item \texttt{snmpwalk} : permet de récupérer les informations d'un sous-arbre donné.
+\item \texttt{snmptable} : permet d'afficher une table. \\
+\end{itemize}
+
+Exemple d'utilisation de la commande \texttt{snmptable}, pour afficher l'ensemble des informations contenu dans la table des connections TCP (objet 1.3.6.1.2.1.6.13) :
+ \lstset{
+         basicstyle=\scriptsize\ttfamily,
+         }
+\begin{lstlisting}[title=snmptable]
+root@pc05-d202 snmp]# snmptable -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.6.13
+SNMP table: TCP-MIB::tcpConnTable
+
+tcpConnLocalAddress tcpConnLocalPort tcpConnRemAddress tcpConnRemPort
+0.0.0.0              111           0.0.0.0              0
+127.0.0.1               25           0.0.0.0              0
+127.0.0.1              199           0.0.0.0              0
+192.168.3.1            39628     188.165.75.23             22
+\end{lstlisting}
+
+
 
 \subsection{MibBrowser}
 SIP peut envoyer deux types de messages (textuels basés sur HTTP 1.0) :
