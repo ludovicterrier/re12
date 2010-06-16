@@ -98,12 +98,29 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 1ère partie
 \section{Configuration et prise en main de l'agent SNMP}
 \subsection{Installation d'un agent}
-SIP est un protocole de ToIP librement utilisable via la plate-forme \textit{Asterisk}. L'intérêt d'un tel protocole en entreprise réside dans le fait que le réseau téléphonique peut être supprimé car les appels utilisent le réseau informatique.  
+L'agent net-snmp est déjà installé sur les machines. Cependant il reste à installer les utilitaires en ligne de commande afin d'effectuer les tests qui suivront, via la commande :\\
 
-\paragraph{}C'est un protocole de signalisation permettant de gérer des sessions multimédia. Cette gestion passe par l'ouverture, la modification et la libération de sessions. SIP permet d'accepter un appel, indiquer une occupation ou encore identifier le mode de compression, etc. 
+
+\noindent \texttt{yum install net-snmp-libs net-snmp-utils}
+
+\paragraph{}Le paquet net-snmp-utils regroupe l'ensemble des outils nécessaire pour tester le bon fonctionnement de la supervision de son réseau tel que : snmpwalk, snmpget\ldots 
 
 \subsection{Ligne de commande}
-De tels réseaux sont composés d'UA\footnote{User Agent} Server (qui réceptionnent les sessions), et Client (qui initialisent les sessions).
+Nous allons dans cette partie, décrire le fonctionnement ainsi qu'un exemple d'utilisation des outils cités ci-dessus.
+
+\subsubsection{snmpwalk}
+Cet outil permet de récupérer des informations à partir d'un point donné dans l'arbre de représentation des OIDs. Pour cela il utilise les requêtes \texttt{get-next-request} et \texttt{get-response} afin de récupérer en suivant tous les items (pas très jolie cette phrase).
+
+\subsubsection{snmpget}
+Snmpget permet quant à lui de récupérer uniquement la valeur d'un OID précisé, sans déroulé l'arbre. Ainsi, si nous voulons récupérer la personne à contacter pour un équipement précisé on utilisera :\\
+
+\noindent \texttt{snmpget -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.1.4.0}
+
+\subsubsection{snmpgetnext}
+Cet outil permet de récupérer la valeur de l'OID suivant celui que l'on va donner en paramètre. Ainsi pour récupérer la valeur de l'uptime en donnant l'OID situé avant dans l'arbre :\\
+
+\noindent \texttt{snmpgetnext -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.1.2}
+
 
 \subsection{MibBrowser}
 SIP peut envoyer deux types de messages (textuels basés sur HTTP 1.0) :
