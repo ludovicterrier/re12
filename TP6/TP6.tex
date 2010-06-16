@@ -146,9 +146,9 @@ Ce logiciel permet de visualiser graphiquement l'ensemble de l'arbre et des vale
 \subsection{Configuration équipements}
 Nous avons donc tu configurer les agents SNMP de nos équipements afin d'utiliser SNMP.\\
 \begin{lstlisting}[title=Commandes Cisco pour configurer l'agent SNMP du routeur]
-Router(config)# snmp-server contact Arnaud Goulut
-Router(config)# snmp-server location Salle de TP, D202
-Router(config)# snmp-server community publicB3
+Router3(config)# snmp-server contact Arnaud Goulut
+Router3(config)# snmp-server location Salle de TP, D202
+Router3(config)# snmp-server community publicB3
 \end{lstlisting}
 
 \paragraph{} Pour vérifier le bon fonctionnement, on utilise snmpwalk pour récupérer les informations de la partie \texttt{system} de la MIB :
@@ -165,7 +165,12 @@ SNMPv2-MIB::sysLocation.0 = STRING: salle de tp
 \end{lstlisting}
 
 \subsection{Perte de connectivité}
-Pour le hardphone, on utili
+Sur nos équipement, on doit donc activer l'émission de trap pour prévenir directement notre serveur de supervision.
+
+\begin{lstlisting}[title=Activation des traps pour l'état des liens]
+Router3(config)# snmp-server host 192.168.3.1 version 2c publicB3
+Router3(config)# snmp-server enable traps snmp linkdown linkup coldstart warmstart
+\end{lstlisting}
 
 \subsection{Le démon snmptrapd}
 dfdfklsjfkj
