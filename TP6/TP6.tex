@@ -212,7 +212,7 @@ Router3(config)# snmp-server enable traps snmp linkdown linkup coldstart warmsta
 \subsection{Le démon snmptrapd}
 Dans cet partie, nous allons configurer notre serveur pour qu'il accepte les traps qui seront émises par nos équipements réseaux. Pour cela, il faut configurer le démon snmptrapd via le fichier \texttt{/etc/snmp/snmptrapd.conf} :
 
-\begin{lstlisting}[title=Activation des traps pour l'état des liens]
+\begin{lstlisting}[title=Configuration de snmptrapd]
 doNotRetainNotificationLogs yes
 disableAuthorization yes
 traphandle default /tmp/exec-trap.sh
@@ -220,9 +220,29 @@ traphandle default /tmp/exec-trap.sh
 
 \paragraph{} Trois paramètres sont donc utilisés : 
 \begin{itemize}
-\item doNotRetainNotificationLogs : empêche snmptrapd de garder des logs,
-\item disableAuthorization : on récupérere toutes les traps, quelque soit la communauté,
-\item traphandle : l'action faite lorsqu'une trap est reçue (ici un script).
+\item \textit{doNotRetainNotificationLogs} : empêche snmptrapd de garder des logs,
+\item \textit{disableAuthorization} : on récupérere toutes les traps, quelque soit la communauté,
+\item \textit{traphandle} : l'action faite lorsqu'une trap est reçue (ici un script).
+\end{itemize}\bigskip
+
+\begin{lstlisting}[title=Exemple de trap reçue]
+UDP: [192.168.3.254]:50643
+DISMAN-EVENT-MIB::sysUpTimeInstance 0:3:40:02.85
+SNMPv2-MIB::snmpTrapOID.0 IF-MIB::linkDown
+IF-MIB::ifIndex.2 2
+IF-MIB::ifDescr.2 FastEthernet0/1
+IF-MIB::ifType.2 ethernetCsmacd
+SNMPv2-SMI::enterprises.9.2.2.1.1.20.2 "Link down"
+SNMP-COMMUNITY-MIB::snmpTrapAddress.0 192.168.3.254
+SNMP-COMMUNITY-MIB::snmpTrapCommunity.0 "publicB3"
+SNMPv2-MIB::snmpTrapEnterprise.0 SNMPv2-SMI::enterprises.9.1.576
+\end{lstlisting}
+
+\paragraph{} La trap ci-dessus nous permet de connaître les informations essentielles :
+\begin{itemize}
+\item \textit{IF-MIB::ifDescr.2 FastEthernet0/1} : précise l'interface concernée,
+\item \textit{SNMPv2-MIB::snmpTrapOID.0 IF-MIB::linkDown} : précise l'événement qui a soulevé l'alerte
+\item \textit{SNMP-COMMUNITY-MIB::snmpTrapAddress.0 192.168.3.254} :
 \end{itemize}
 
 
