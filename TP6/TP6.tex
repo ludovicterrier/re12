@@ -199,8 +199,24 @@ Router3(config)# snmp-server host 192.168.3.1 version 2c publicB3
 Router3(config)# snmp-server enable traps snmp linkdown linkup coldstart warmstart
 \end{lstlisting}
 
+\paragraph{} La première ligne permet de définir l'adresse du serveur qui recevra les notifications, ainsi que la communauté qui doit être utilisée. La seconde permet de préciser sur quels événements les traps seront envoyées, ici uniquement en rapport avec les états des liens.
+
 \subsection{Le démon snmptrapd}
-dfdfklsjfkj
+Dans cet partie, nous allons configurer notre serveur pour qu'il accepte les traps qui seront émises par nos équipements réseaux. Pour cela, il faut configurer le démon snmptrapd via le fichier \texttt{/etc/snmp/snmptrapd.conf} :
+
+\begin{lstlisting}[title=Activation des traps pour l'état des liens]
+doNotRetainNotificationLogs yes
+disableAuthorization yes
+traphandle default /tmp/exec-trap.sh
+\end{lstlisting}
+
+\paragraph{} Trois paramètres sont donc utilisés : 
+\begin{itemize}
+\item doNotRetainNotificationLogs : empêche snmptrapd de garder des logs,
+\item disableAuthorization : on récupérere toutes les traps, quelque soit la communauté,
+\item traphandle : l'action faite lorsqu'une trap est reçue (ici un script).
+\end{itemize}
+
 
 \section{Prise en main d'une console de supervision}
 \subsection{Installation de ZenOSS}
