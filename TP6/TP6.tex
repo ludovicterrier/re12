@@ -107,60 +107,37 @@ rwcommunity privateB3
 
 Nous avons fait au plus simple, ainsi la communauté \textbf{publicB3} est autorisée a consulter les informations contenues dans la \textit{MIB}\footnote{Management Information Base}, alors que \textbf{privateB3} peut lire, mais aussi écrire dans cette même base.
 
-\subsection{Ligne de commande}
-Afin de consulter la MIB disponible sur notre machine, il nous a fallut installer le programme \texttt{net-snmp-utils} via les dépôts Fedora (\texttt{yum install}). Nous avons ensuite pu tester les différentes commandes disponibles :\\
 
-\begin{itemize}
-\item \texttt{snmpget} : permet de récupérer les informations d'une instance précise.
-\item \texttt{snmpgetnext} : permet de récupérer les informations de l'instance disponible suivante.
-\item \texttt{snmpwalk} : permet de récupérer les informations d'un sous-arbre donné.
-\item \texttt{snmptable} : permet d'afficher une table.\\
-\end{itemize}
-
-Exemple d'utilisation de la commande \texttt{snmptable}, pour afficher l'ensemble des informations contenu dans la table des connections TCP (objet 1.3.6.1.2.1.6.13) :
-
-\begin{lstlisting}[title=snmptable]
-root@pc05-d202 snmp]# snmptable -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.6.13
-SNMP table: TCP-MIB::tcpConnTable
-
-tcpConnLocalAddress tcpConnLocalPort tcpConnRemAddress tcpConnRemPort
-0.0.0.0              111           0.0.0.0              0
-127.0.0.1               25           0.0.0.0              0
-127.0.0.1              199           0.0.0.0              0
-192.168.3.1            39628     188.165.75.23             22
-\end{lstlisting}
-
-
-\subsection{Installation d'un agent}
-L'agent net-snmp est déjà installé sur les machines. Cependant il reste à installer les utilitaires en ligne de commande afin d'effectuer les tests qui suivront, via la commande :\\
-
+\paragraph{}Cependant il restait à installer les utilitaires en ligne de commande afin d'effectuer les tests qui suivront, via la commande :\\
 
 \noindent \texttt{yum install net-snmp-libs net-snmp-utils}
 
 \paragraph{}Le paquet net-snmp-utils regroupe l'ensemble des outils nécessaire pour tester le bon fonctionnement de la supervision de son réseau tel que : snmpwalk, snmpget\ldots 
-
 \subsection{Ligne de commande}
-Nous allons dans cette partie, décrire le fonctionnement ainsi qu'un exemple d'utilisation des outils cités ci-dessus.
+Les différents outils disponibles dans le paquet précédemment installé permettent de consulter les MIB. On utilise généralement, le nom de la commande, suivi de \texttt{-v 2c} pour la version, \texttt{-c communauté} pour la communauté avec laquelle on veut accéder à la MIB, l'adresse de la machine qui possède la MIB et enfin, l'OID sur lequel on veut appliquer la commande. Voici la liste de ces outils accompagnés d'exemples :\\
 
 
-\subsubsection{snmpwalk}
-Cet outil permet de récupérer des informations à partir d'un point donné dans l'arbre de représentation des OIDs. Pour cela il utilise les requêtes \texttt{get-next-request} et \texttt{get-response} afin de récupérer en suivant tous les items (pas très jolie cette phrase).
 
-\subsubsection{snmpget}
-Snmpget permet quant à lui de récupérer uniquement la valeur d'un OID précisé, sans déroulé l'arbre. Ainsi, si nous voulons récupérer la personne à contacter pour un équipement précisé on utilisera :\\
+
+\subsubsection{\texttt{snmpget}}
+Cette commande permet de récupérer uniquement la valeur d'un OID (d'une instance) précis. Ainsi, si nous voulons récupérer la personne à contacter pour un équipement donné (ici, notre machine) on utilisera :\\
 
 \noindent \texttt{snmpget -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.1.4.0}
 
-\subsubsection{snmpgetnext}
-Cet outil permet de récupérer la valeur de l'OID suivant celui que l'on va donner en paramètre. Ainsi pour récupérer la valeur de l'uptime en donnant l'OID situé avant dans l'arbre :\\
+
+\subsubsection{\texttt{snmpgetnext}}
+Cet outil permet de récupérer la valeur de l'instance suivant directement celle que l'on a donnée en paramètre. Ainsi pour récupérer la valeur de l'uptime en donnant l'OID situé avant dans l'arbre :\\
 
 \noindent \texttt{snmpgetnext -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.1.2}
 
-\subsubsection{snmptable}
-Cet outil permet de récupérer un ensemble d'informations en une seule commande, en le mettant sous forme d'un tableau :\\
+\subsubsection{\texttt{snmpwalk}}
+Cet outil permet de récupérer des informations d'un sous-arbre à partir d'un point donné dans l'arbre des OIDs. Pour cela il utilise les requêtes \texttt{get-next-request} et \texttt{get-response} afin de parcourir l'ensemble des items du sous arbre donné.
+
+\subsubsection{\texttt{snmptable}}
+Cet outil permet de récupérer un ensemble d'informations en une seule commande, en le mettant sous forme d'un tableau. On lui indique un OID et la commande récupère la valeur des OIDs situés juste dessous :\\
 
 \begin{lstlisting}[title=Résultat snmptable pour les connexions TCP]
-root@pc05-d202 snmp]# snmptable -v 1 -c publicB3 127.0.0.1 1.3.6.1.2.1.6.13
+root@pc05-d202 snmp]# snmptable -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.6.13
 SNMP table: TCP-MIB::tcpConnTable
 
 tcpConnState tcpConnLocalAddress tcpConnLocalPort tcpConnRemAddress tcpConn
@@ -171,11 +148,26 @@ tcpConnState tcpConnLocalAddress tcpConnLocalPort tcpConnRemAddress tcpConn
     listen           127.0.0.1              199           0.0.0.0        0
   established      192.168.3.1            39628     188.165.75.23       22
 \end{lstlisting}
+\paragraph{}Les informations qui pourraient êtres intéressant de récupérer dans une MIB sont le contact, le nom de la machine (host) et la quantité d'octets entrant et sortant pour une interface donnée. Dans une MIB on récupère généralement des \textit{métriques}, c'est ensuite à l'administrateur de les transformer en informations exploitables, on parle alors de \textit{indicateurs}. C'est par exemple le cas lorsque l'on obtient la quantité d'octets sortie d'une interface et qu'on transforme cette valeur en débit.
+
+\paragraph{}Voici un extrait graphique de la RFC 1214 décrivant le contenu de la MIB :
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=5cm]{rfc1214.png}
+\caption{Sous-arbre de la MIB au niveau des connexions TCP.}
+\label{fig:rfc1214}
+\end{center}
+\end{figure}
+
+On voit qu'elle est composée, de tables, d'éléments qui ne sont pas forcément des instances, mais aussi des instances concernant un OID.
+
+\paragraph{}Nous avons ensuite récupéré une table via \textit{SNMP v1}, puis par \textit{SNMP v2c}. Nous avons pu observer via Wireshark qu'avec la v1 de SNMP, \texttt{snmptable} procède en utilisant \texttt{snmpgetnext} pour parcourir l'ensemble de la table, alors qu'avec la v2c, \texttt{snmptable} procède avec \texttt{getbulkrequest} pour récupérer plus rapidement les données.
 
 \subsection{MibBrowser}
-Ce logiciel permet de visualiser graphiquement l'ensemble de l'arbre et des valeurs associées à chaque OID.
+Ce logiciel permet de visualiser graphiquement l'ensemble de l'arbre et des valeurs associées à chaque OIDs.
 
-\paragraph{} Le logiciel ne fonctionnait pas très bien, en effet en utilisant la fonction snmpget, il parcourait l'ensemble de l'arborescence au lieu de s'arrêter.
+\paragraph{}Dans la mesure ou le logiciel ne fonctionnait pas très bien, nous ne l'avons pas utilisé pour cette partie du TP. En effet en utilisant la fonction \texttt{snmpget}, il parcourait l'ensemble de l'arborescence au lieu de se cantonner à la requête qui lui était passée. Ainsi nous ne sommes pas en mesure de vous proposer la réponse à la présente question.
 
 \section{Surveillance des équipements réseau et alarmes}
 \subsection{Configuration équipements}
@@ -212,12 +204,12 @@ dfdfklsjfkj
 
 \section{Prise en main d'une console de supervision}
 \subsection{Installation de ZenOSS}
-L'installation de ZenOSS se fait simplement, on récupère le fichier d'installation sur leur site et on lance. Après avoir répondu a plusieurs questions, le tout est en place et fonctionnel. \\
+L'installation de ZenOSS se fait simplement, on récupère le fichier d'installation sur le site Zenoss et on le lance. Après avoir répondu à quelques questions, le tout est en place et fonctionnel. Il suffit alors d'intégrer nos équipements en indiquant notamment leur communauté d'accès et leur adresse IP, il faut aussi indiquer la \textit{classe} de l'appareil, en effet Zenoss permet d'interpréter les traps issus de MIBs propriétaires, pour se faire il faut lui signifier le type de matériel à traiter. Ainsi, Zenoss propose les classes : Cisco, serveurs (classés par systèmes d'exploitation), routeurs (par marques), etc.
 
+\paragraph{}Cette plate-forme de supervision, permet de visualiser les traps émanant d'un réseau administré. Il suffit d'y intégrer nos équipements pour que ce logiciel reçoive les traps, les interprète selon la classe qu'on lui a indiquée et enfin les affiche dans une console.
 
 \subsection{Parcours des fonctionnalités}
 
-Dans \textit{Asterisk}, les extensions définissent une série d'étapes uniques qui vont être déroulées au cours d'un appel. Pour définir une extension, on utilise la forme : \\
 
 %\paragraph{}Voici le schéma décrivant l'infrastructure du réseau que nous désirons obtenir :
 %\clearpage%
