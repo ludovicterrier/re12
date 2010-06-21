@@ -233,8 +233,8 @@ SNMPv2-MIB::snmpTrapEnterprise.0 SNMPv2-SMI::enterprises.9.1.576
 \paragraph{} La trap ci-dessus nous permet de connaître les informations essentielles :
 \begin{itemize}
 \item \textit{IF-MIB::ifDescr.2 FastEthernet0/1} : précise l'interface concernée,
-\item \textit{SNMPv2-MIB::snmpTrapOID.0 IF-MIB::linkDown} : précise l'événement qui a soulevé l'alerte
-\item \textit{SNMP-COMMUNITY-MIB::snmpTrapAddress.0 192.168.3.254} :
+\item \textit{SNMPv2-MIB::snmpTrapOID.0 IF-MIB::linkDown} : l'événement qui a soulevé l'alerte,
+\item \textit{SNMP-COMMUNITY-MIB::snmpTrapAddress.0 192.168.3.254} : l'adresse source du trap.
 \end{itemize}
 
 
@@ -249,11 +249,22 @@ L'installation de ZenOSS se fait simplement, on récupère le fichier d'installa
 
 %\paragraph{}Voici le schéma décrivant l'infrastructure du réseau que nous désirons obtenir :
 %\clearpage%
-%\begin{figure}[!h]
-%\begin{center}
-%\includegraphics[height=5cm]{}
-%\caption{Structure du réseau}
-%\label{fig:da}
-%\end{center}
-%\end{figure}
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=13cm]{zenoss_interface}
+\caption{Console d'administration}
+\label{fig:da}
+\end{center}
+\end{figure}
+
+\paragraph{} Cette page permet de visualiser rapidement l'état de l'ensemble des périphériques surveillés.
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=11cm]{zenoss_console}
+\caption{Console des événements}
+\label{fig:da}
+\end{center}
+\end{figure}
+
 \end{document}
