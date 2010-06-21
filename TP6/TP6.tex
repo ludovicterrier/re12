@@ -56,8 +56,8 @@
 \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
 
 \definecolor{gris}{gray}{0.75}
+\definecolor{gris2}{cmyk}{0.43, 0.35, 0.35,0.01}
 \definecolor{bleup}{HTML}{258EE9}
-
 
 %\renewcommand*\familydefault{\ttdefault} %% Only if the base font of the document is to be typewriter style
 %\renewcommand{\rmdefault}{ptm}
@@ -105,16 +105,16 @@ rocommunity publicB3
 rwcommunity privateB3
 \end{lstlisting}
 
-Nous avons fait au plus simple, ainsi la communauté \textbf{publicB3} est autorisée a consulter les informations contenues dans la \textit{MIB}\footnote{Management Information Base}, alors que \textbf{privateB3} peut lire, mais aussi écrire dans cette même base.
+Nous avons fait au plus simple, ainsi la communauté \textbf{publicB3} est autorisée à consulter les informations contenues dans la \textit{MIB}\footnote{Management Information Base}, alors que \textbf{privateB3} peut lire, mais aussi écrire dans cette même base.
 
 
-\paragraph{}Cependant il restait à installer les utilitaires en ligne de commande afin d'effectuer les tests qui suivront, via la commande :\\
+\paragraph{}Cependant il restait à installer les utilitaires en ligne de commande afin d'effectuer les tests qui suivront, ceci s'effectue via la commande :\\
 
-\noindent \texttt{yum install net-snmp-libs net-snmp-utils}
+\noindent \fcolorbox{black}{white}{\parbox{\linewidth}{\texttt{yum install net-snmp-libs net-snmp-utils}}}
 
-\paragraph{}Le paquet net-snmp-utils regroupe l'ensemble des outils nécessaire pour tester le bon fonctionnement de la supervision de son réseau tel que : snmpwalk, snmpget\ldots 
+\paragraph{}Le paquet net-snmp-utils regroupe l'ensemble des outils nécessaires pour tester le bon fonctionnement de la supervision de son réseau tel que : snmpwalk, snmpget\ldots 
 \subsection{Ligne de commande}
-Les différents outils disponibles dans le paquet précédemment installé permettent de consulter les MIB. On utilise généralement, le nom de la commande, suivi de \texttt{-v 2c} pour la version, \texttt{-c communauté} pour la communauté avec laquelle on veut accéder à la MIB, l'adresse de la machine qui possède la MIB et enfin, l'OID sur lequel on veut appliquer la commande. Voici la liste de ces outils accompagnés d'exemples :\\
+Les différents outils disponibles dans le paquet précédemment installé permettent de consulter les MIBs de nos équipements. On utilise généralement, le nom de la commande, suivi de \texttt{-v} pour la version (\textit{2c} dans le cadre du TP), \texttt{-c communauté} pour la communauté avec laquelle on veut accéder à la MIB, l'adresse de la machine qui possède la MIB et enfin, l'OID sur lequel on veut appliquer la commande. Voici la liste de ces outils accompagnés d'exemples :\\
 
 
 
@@ -122,19 +122,19 @@ Les différents outils disponibles dans le paquet précédemment installé perme
 \subsubsection{\texttt{snmpget}}
 Cette commande permet de récupérer uniquement la valeur d'un OID (d'une instance) précis. Ainsi, si nous voulons récupérer la personne à contacter pour un équipement donné (ici, notre machine) on utilisera :\\
 
-\noindent \texttt{snmpget -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.1.4.0}
 
+\noindent \fcolorbox{black}{white}{\parbox{\linewidth}{\texttt{snmpget -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.1.4.0}}}
 
 \subsubsection{\texttt{snmpgetnext}}
 Cet outil permet de récupérer la valeur de l'instance suivant directement celle que l'on a donnée en paramètre. Ainsi pour récupérer la valeur de l'uptime en donnant l'OID situé avant dans l'arbre :\\
 
-\noindent \texttt{snmpgetnext -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.1.2}
+\noindent \fcolorbox{black}{white}{\parbox{\linewidth}{\texttt{snmpgetnext -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.1.2}}}
 
 \subsubsection{\texttt{snmpwalk}}
-Cet outil permet de récupérer des informations d'un sous-arbre à partir d'un point donné dans l'arbre des OIDs. Pour cela il utilise les requêtes \texttt{get-next-request} et \texttt{get-response} afin de parcourir l'ensemble des items du sous arbre donné.
+Récupère des informations d'un sous-arbre à partir d'un point donné dans l'arbre des OIDs. Pour cela il utilise les requêtes \texttt{get-next-request} et \texttt{get-response} afin de parcourir l'ensemble des items du sous arbre donné.
 
 \subsubsection{\texttt{snmptable}}
-Cet outil permet de récupérer un ensemble d'informations en une seule commande, en le mettant sous forme d'un tableau. On lui indique un OID et la commande récupère la valeur des OIDs situés juste dessous :\\
+Cet outil permet de récupérer un ensemble d'informations en une seule commande, en l'affichant sous forme d'un tableau. On lui indique un OID et la commande récupère la valeur des OIDs inclus dans la table :\\
 
 \begin{lstlisting}[title=Résultat snmptable pour les connexions TCP]
 root@pc05-d202 snmp]# snmptable -v 2c -c publicB3 127.0.0.1 1.3.6.1.2.1.6.13
@@ -148,11 +148,15 @@ tcpConnState tcpConnLocalAddress tcpConnLocalPort tcpConnRemAddress tcpConn
     listen           127.0.0.1              199           0.0.0.0        0
   established      192.168.3.1            39628     188.165.75.23       22
 \end{lstlisting}
-\paragraph{}Les informations qui pourraient êtres intéressant de récupérer dans une MIB sont le contact, le nom de la machine (host) et la quantité d'octets entrant et sortant pour une interface donnée. Dans une MIB on récupère généralement des \textit{métriques}, c'est ensuite à l'administrateur de les transformer en informations exploitables, on parle alors de \textit{indicateurs}. C'est par exemple le cas lorsque l'on obtient la quantité d'octets sortie d'une interface et qu'on transforme cette valeur en débit.
+\paragraph{}Les informations qui pourraient êtres intéressantes à récupérer dans une MIB sont le contact, le nom de la machine (host) et la quantité d'octets entrant et sortant pour une interface donnée. 
+
+\begin{center}
+\fcolorbox{black}{gris}{\parbox{0.9\linewidth}{Dans une MIB on récupère généralement des \textbf{métriques}, c'est ensuite à l'administrateur de les transformer en informations exploitables, on parle alors d'\textbf{indicateurs}. C'est par exemple le cas lorsque l'on obtient la quantité d'octets sortis d'une interface et que l'on transforme cette valeur en débit.}}
+\end{center}
 
 \paragraph{}Voici un extrait graphique de la RFC 1214 décrivant le contenu de la MIB :
 
-s
+
 
 On voit qu'elle est composée, de tables, d'éléments qui ne sont pas forcément des instances, mais aussi des instances concernant un OID.
 
@@ -165,7 +169,7 @@ Ce logiciel permet de visualiser graphiquement l'ensemble de l'arbre et des vale
 
 \section{Surveillance des équipements réseau et alarmes}
 \subsection{Configuration équipements}
-Nous avons donc tu configurer les agents SNMP de nos équipements afin d'utiliser SNMP.\\
+Nous avons donc dû configurer les agents SNMP de nos équipements afin d'utiliser SNMP.\\
 \begin{lstlisting}[title=Commandes Cisco pour configurer l'agent SNMP du routeur]
 Router3(config)# snmp-server contact Arnaud Goulut
 Router3(config)# snmp-server location Salle de TP, D202
@@ -186,17 +190,17 @@ SNMPv2-MIB::sysLocation.0 = STRING: salle de tp
 \end{lstlisting}
 
 \subsection{Perte de connectivité}
-Sur nos équipement, on doit donc activer l'émission de trap pour prévenir directement notre serveur de supervision.
+Sur nos équipements, nous avons donc activé l'émission de trap afin que ceux-ci préviennent directement notre serveur de supervision.
 
 \begin{lstlisting}[title=Activation des traps pour l'état des liens]
 Router3(config)# snmp-server host 192.168.3.1 version 2c publicB3
 Router3(config)# snmp-server enable traps snmp linkdown linkup coldstart warmstart
 \end{lstlisting}
 
-\paragraph{} La première ligne permet de définir l'adresse du serveur qui recevra les notifications, ainsi que la communauté qui doit être utilisée. La seconde permet de préciser sur quels événements les traps seront envoyées, ici uniquement en rapport avec les états des liens.
+\paragraph{} La première ligne permet de définir l'adresse du serveur qui recevra les notifications, ainsi que la communauté qui doit être utilisée. La seconde permet de préciser sur quels événements les traps seront envoyés, ici uniquement en rapport avec les états des liens.
 
 \subsection{Le démon snmptrapd}
-Dans cet partie, nous allons configurer notre serveur pour qu'il accepte les traps qui seront émises par nos équipements réseaux. Pour cela, il faut configurer le démon snmptrapd via le fichier \texttt{/etc/snmp/snmptrapd.conf} :
+Dans cette partie, nous allons configurer notre serveur (gestionnaire) pour qu'il accepte les traps qui seront émis par nos équipements réseaux. Pour cela, il faut configurer le démon snmptrapd via le fichier \texttt{/etc/snmp/snmptrapd.conf} :
 
 \begin{lstlisting}[title=Configuration de snmptrapd]
 doNotRetainNotificationLogs yes
@@ -207,8 +211,8 @@ traphandle default /tmp/exec-trap.sh
 \paragraph{} Trois paramètres sont donc utilisés : 
 \begin{itemize}
 \item \textit{doNotRetainNotificationLogs} : empêche snmptrapd de garder des logs,
-\item \textit{disableAuthorization} : on récupérere toutes les traps, quelque soit la communauté,
-\item \textit{traphandle} : l'action faite lorsqu'une trap est reçue (ici un script).
+\item \textit{disableAuthorization} : on récupérere toutes les traps, quelle que soit la communauté,
+\item \textit{traphandle} : l'action réalisée par le démon lorsqu'un trap est reçu (ici un script).
 \end{itemize}\bigskip
 
 \begin{lstlisting}[title=Exemple de trap reçue]
@@ -224,7 +228,7 @@ SNMP-COMMUNITY-MIB::snmpTrapCommunity.0 "publicB3"
 SNMPv2-MIB::snmpTrapEnterprise.0 SNMPv2-SMI::enterprises.9.1.576
 \end{lstlisting}
 
-\paragraph{} La trap ci-dessus nous permet de connaître les informations essentielles :
+\paragraph{} Le trap ci-dessus nous permet de connaître les informations essentielles :
 \begin{itemize}
 \item \textit{IF-MIB::ifDescr.2 FastEthernet0/1} : précise l'interface concernée,
 \item \textit{SNMPv2-MIB::snmpTrapOID.0 IF-MIB::linkDown} : précise l'événement qui a soulevé l'alerte
